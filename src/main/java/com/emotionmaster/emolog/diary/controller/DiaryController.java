@@ -7,10 +7,7 @@ import com.emotionmaster.emolog.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/diary")
@@ -24,5 +21,12 @@ public class DiaryController {
         Diary savedDiary = diaryService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new AddDiaryResponse(savedDiary));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDiary(@PathVariable("id") long id){
+        diaryService.delete(id);
+        return ResponseEntity.ok()
+                .build();
     }
 }

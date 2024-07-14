@@ -22,4 +22,8 @@ public class DiaryService {
         emotionRepository.save(request.toEmotionEntity(diary));
         return diary;
     }
+
+    public void delete(long id){
+        diaryRepository.deleteById(id);
+    }
 }
