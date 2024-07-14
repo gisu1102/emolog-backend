@@ -27,6 +27,7 @@ import java.util.List;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -104,5 +105,19 @@ class DiaryControllerTest {
 
     }
 
+    @DisplayName("deleteDiary() : id 값에 맞춰 일기를 삭제한다")
+    @Test
+    public void deleteDiary() throws Exception {
+        final String url = "/api/diary/{id}";
+        Diary diary = diaryRepository.save(new Diary(LocalDate.now(), "content"));
 
+        ResultActions results = mockMvc.perform(delete(url,diary.getId()));
+
+        List<Diary> diaryList = diaryRepository.findAll();
+
+        results.andExpect(status().isOk());
+
+        assertThat(diaryList.size()).isZero();
+
+    }
 }
