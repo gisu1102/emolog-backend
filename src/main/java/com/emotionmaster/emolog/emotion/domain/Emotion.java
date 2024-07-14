@@ -19,7 +19,8 @@ public class Emotion extends BaseEntity {
     @Column(nullable = false)
     private String emotion;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "diary_id")
     private Diary diary;
 
     @Builder

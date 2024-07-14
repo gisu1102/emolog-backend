@@ -27,6 +27,7 @@ public class Color extends BaseEntity {
     @Column(name="hexa", nullable = false)
     private String hexa;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "diary_id")
     private Diary diary;
 }

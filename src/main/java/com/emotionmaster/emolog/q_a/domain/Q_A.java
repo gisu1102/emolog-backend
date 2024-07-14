@@ -22,7 +22,8 @@ public class Q_A extends BaseEntity {
     @Column(nullable = false)
     private String answer;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "diary_id")
     private Diary diary;
 
     @Builder
