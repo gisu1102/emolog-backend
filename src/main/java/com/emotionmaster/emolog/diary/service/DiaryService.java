@@ -8,6 +8,8 @@ import com.emotionmaster.emolog.q_a.repository.QaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DiaryService {
@@ -25,5 +27,9 @@ public class DiaryService {
 
     public void delete(long id){
         diaryRepository.deleteById(id);
+    }
+
+    public List<Diary> findAllColorOfMonth(int month){
+        return diaryRepository.findAllByMonth(month);
     }
 }

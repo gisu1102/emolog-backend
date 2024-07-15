@@ -11,5 +11,5 @@ import java.util.List;
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
     @Query("SELECT d FROM Diary d WHERE MONTH(d.date) =:month")
-    List<Diary> findColorByMonth(int month);
+    List<Diary> findAllByMonth(int month);
 }

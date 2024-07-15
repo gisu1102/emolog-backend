@@ -9,6 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/diary")
 @RequiredArgsConstructor
@@ -28,5 +32,20 @@ public class DiaryController {
         diaryService.delete(id);
         return ResponseEntity.ok()
                 .build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Map<LocalDate, String>>> findColorByMonth(@RequestParam("month") int month){
+        List<Map<LocalDate, String>> colorList = diaryService.findAllColorOfMonth(month)
+                .stream()
+                .map(this::dateAndColor)
+                .toList();
+
+        return ResponseEntity.ok()
+                .body(colorList);
+    }
+
+    private Map<LocalDate, String> dateAndColor(Diary diary){
+        return Map.of(diary.getDate(), diary.getColor().getHexa());
     }
 }
