@@ -33,19 +33,4 @@ public class DiaryController {
         return ResponseEntity.ok()
                 .build();
     }
-
-    @GetMapping
-    public ResponseEntity<List<Map<LocalDate, String>>> findColorByMonth(@RequestParam("month") int month){
-        List<Map<LocalDate, String>> colorList = diaryService.findAllColorOfMonth(month)
-                .stream()
-                .map(this::dateAndColor)
-                .toList();
-
-        return ResponseEntity.ok()
-                .body(colorList);
-    }
-
-    private Map<LocalDate, String> dateAndColor(Diary diary){
-        return Map.of(diary.getDate(), diary.getColor().getHexa());
-    }
 }
