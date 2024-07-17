@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import java.util.Map;
 
 @AllArgsConstructor
-public class ProviderOAuth2UserNaver implements ProviderOAuth2UserCusotom {
+public class ProviderOAuth2UserNaver implements ProviderOAuth2UserCustom {
     private Map<String, Object> attributes;
 
     @Override

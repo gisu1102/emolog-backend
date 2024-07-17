@@ -1,6 +1,6 @@
 package com.emotionmaster.emolog.user.config.auth;
 
-import com.emotionmaster.emolog.user.config.auth.providerOauthUser.ProviderOAuth2UserCusotom;
+import com.emotionmaster.emolog.user.config.auth.providerOauthUser.ProviderOAuth2UserCustom;
 import com.emotionmaster.emolog.user.config.auth.providerOauthUser.ProviderOAuth2UserGoogle;
 import com.emotionmaster.emolog.user.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
 import com.emotionmaster.emolog.user.config.auth.providerOauthUser.ProviderOAuth2UserNaver;
@@ -26,7 +26,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         String providedId = userRequest.getClientRegistration().getRegistrationId();
 
-        ProviderOAuth2UserCusotom oAuth2UserInfo = null;
+        ProviderOAuth2UserCustom oAuth2UserInfo = null;
         if ("google".equals(providedId)) {
             oAuth2UserInfo = new ProviderOAuth2UserGoogle(oAuth2User.getAttributes());
         } else if ("kakao".equals(providedId)) {
@@ -42,7 +42,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
     }
 
     //각 플랫폼 별 추출한 정보 db저장
-    private User saveOrUpdate(ProviderOAuth2UserCusotom providerOAuth2UserCusotom) {
+    private User saveOrUpdate(ProviderOAuth2UserCustom providerOAuth2UserCusotom) {
         String providerId = providerOAuth2UserCusotom.getProviderId();
 
         String provider = providerOAuth2UserCusotom.getProvider();

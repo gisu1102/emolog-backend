@@ -20,16 +20,16 @@ spring:
       client:
         registration:
           google:
-            client-id: 1079251988633-iudjltvvh942nads7gc1jpqkfp7l5gp5.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${google.id}
+            client-secret: ${google.secret}
             redirect-uri: http://localhost:8080/login/oauth2/code/google
             scope:
               - email
               - profile
           kakao:
-            client-id: 4fd9c148291848dd3f2769521cb9e245
-            client-secret: PEavDY9bnkmtmCKjb1vrtgOqKIEjhnsA
-          #redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            client-id: ${kakao.id}
+            client-secret: ${kakao.secret}
+            #redirect-uri: http://localhost:8080/login/oauth2/code/kakao
             redirect-uri: https://getpostman.com/oauth2/callback
             authorization-grant-type: authorization_code
             client-authentication-method: POST
@@ -37,8 +37,8 @@ spring:
             scope:
               - profile_nickname
           naver:
-            client-id: snAMYKl4CmYZAIu2j_S_
-            client-secret: LTvu56BMd8
+            client-id: ${naver.id}
+            client-secret: ${naver.secret}
             scope:
               - name
               - email
