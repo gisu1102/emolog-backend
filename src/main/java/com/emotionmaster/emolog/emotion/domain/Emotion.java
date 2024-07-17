@@ -19,6 +19,9 @@ public class Emotion extends BaseEntity {
     @Column(nullable = false)
     private String emotion;
 
+    @Column(name = "emotion_type")
+    private EmotionType emotionType;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id")
     private Diary diary;
@@ -27,5 +30,9 @@ public class Emotion extends BaseEntity {
     public Emotion(String emotion, Diary diary) {
         this.emotion = emotion;
         this.diary = diary;
+    }
+
+    public void toEmotionType(EmotionType emotionType){
+        this.emotionType = emotionType;
     }
 }

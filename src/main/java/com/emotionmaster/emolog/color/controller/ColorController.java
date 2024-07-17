@@ -1,13 +1,13 @@
 package com.emotionmaster.emolog.color.controller;
 
-import com.emotionmaster.emolog.color.domain.Color;
-import com.emotionmaster.emolog.color.dto.request.AddColorRequest;
 import com.emotionmaster.emolog.color.service.ColorService;
 import com.emotionmaster.emolog.diary.domain.Diary;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,11 +33,5 @@ public class ColorController {
 
     private Map<LocalDate, String> dateAndColor(Diary diary){
         return Map.of(diary.getDate(), diary.getColor().getHexa());
-    }
-
-    @PostMapping
-    public ResponseEntity<Color> saveColor(@RequestBody AddColorRequest request){
-        return ResponseEntity.ok()
-                .body(colorService.saveColor(request));
     }
 }
