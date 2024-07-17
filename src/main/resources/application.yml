@@ -29,7 +29,7 @@ spring:
           kakao:
             client-id: 4fd9c148291848dd3f2769521cb9e245
             client-secret: PEavDY9bnkmtmCKjb1vrtgOqKIEjhnsA
-          #redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            #redirect-uri: http://localhost:8080/login/oauth2/code/kakao
             redirect-uri: https://getpostman.com/oauth2/callback
             authorization-grant-type: authorization_code
             client-authentication-method: POST

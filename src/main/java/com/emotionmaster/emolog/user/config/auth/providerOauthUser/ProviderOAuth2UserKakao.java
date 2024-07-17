@@ -7,7 +7,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProviderOAuth2UserKakao implements ProviderOAuth2UserCusotom {
+public class ProviderOAuth2UserKakao implements ProviderOAuth2UserCustom {
     private Map<String, Object> attributes;
 
     @Override
