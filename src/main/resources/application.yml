@@ -2,8 +2,7 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     url : 'jdbc:h2:~/test'
-    hikari:
-      username: sa
+    username: sa
   h2:
     console:
       enabled: true
@@ -13,8 +12,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect #추가
     hibernate:
       ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect #추가
   security:
     oauth2:
       client:

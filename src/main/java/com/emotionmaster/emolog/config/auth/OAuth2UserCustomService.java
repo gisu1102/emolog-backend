@@ -1,9 +1,9 @@
-package com.emotionmaster.emolog.user.config.auth;
+package com.emotionmaster.emolog.config.auth;
 
-import com.emotionmaster.emolog.user.config.auth.providerOauthUser.ProviderOAuth2UserCustom;
-import com.emotionmaster.emolog.user.config.auth.providerOauthUser.ProviderOAuth2UserGoogle;
-import com.emotionmaster.emolog.user.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
-import com.emotionmaster.emolog.user.config.auth.providerOauthUser.ProviderOAuth2UserNaver;
+import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserCustom;
+import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserGoogle;
+import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
+import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserNaver;
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

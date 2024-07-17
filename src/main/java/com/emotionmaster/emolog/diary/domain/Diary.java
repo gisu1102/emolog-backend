@@ -2,7 +2,7 @@ package com.emotionmaster.emolog.diary.domain;
 
 import com.emotionmaster.emolog.color.domain.Color;
 import com.emotionmaster.emolog.emotion.domain.Emotion;
-import com.emotionmaster.emolog.global.BaseEntity;
+import com.emotionmaster.emolog.config.BaseEntity;
 import com.emotionmaster.emolog.q_a.domain.Q_A;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

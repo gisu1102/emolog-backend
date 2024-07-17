@@ -1,8 +1,7 @@
 package com.emotionmaster.emolog.color.domain;
 
 import com.emotionmaster.emolog.diary.domain.Diary;
-import com.emotionmaster.emolog.global.BaseEntity;
-import com.fasterxml.jackson.databind.ser.Serializers;
+import com.emotionmaster.emolog.config.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

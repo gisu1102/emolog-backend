@@ -1,6 +1,6 @@
-package com.emotionmaster.emolog.user.config;
+package com.emotionmaster.emolog.config;
 
-import com.emotionmaster.emolog.user.config.jwt.TokenProvider;
+import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

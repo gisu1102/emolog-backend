@@ -1,4 +1,4 @@
-package com.emotionmaster.emolog.global;
+package com.emotionmaster.emolog.config;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,24 +1,21 @@
-package com.emotionmaster.emolog.user.config.auth.providerOauthUser;
+package com.emotionmaster.emolog.config.auth.providerOauthUser;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @AllArgsConstructor
-@NoArgsConstructor
-public class ProviderOAuth2UserGoogle implements ProviderOAuth2UserCustom {
-
+public class ProviderOAuth2UserNaver implements ProviderOAuth2UserCustom {
     private Map<String, Object> attributes;
 
     @Override
     public String getProviderId() {
-        return (String) attributes.get("sub");
+        return (String) attributes.get("id");
     }
 
     @Override
     public String getProvider() {
-        return "google";
+        return "naver";
     }
 
     @Override

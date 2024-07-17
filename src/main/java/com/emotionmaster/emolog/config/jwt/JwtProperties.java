@@ -1,4 +1,4 @@
-package com.emotionmaster.emolog.user.config.jwt;
+package com.emotionmaster.emolog.config.jwt;
 
 import lombok.Getter;
 import lombok.Setter;

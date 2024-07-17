@@ -1,4 +1,4 @@
-package com.emotionmaster.emolog.user.config.jwt;
+package com.emotionmaster.emolog.config.jwt;
 
 import com.emotionmaster.emolog.user.domain.User;
 import io.jsonwebtoken.Claims;

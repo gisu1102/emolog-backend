@@ -1,7 +1,7 @@
 package com.emotionmaster.emolog.user.service;
 
 
-import com.emotionmaster.emolog.user.config.jwt.TokenProvider;
+import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.user.domain.RefreshToken;
 import com.emotionmaster.emolog.user.repository.RefreshTokenRepository;
 import jakarta.transaction.Transactional;
