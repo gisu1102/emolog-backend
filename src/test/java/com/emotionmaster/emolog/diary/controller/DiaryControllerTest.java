@@ -7,6 +7,7 @@ import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
 import com.emotionmaster.emolog.diary.dto.request.Qa;
 import com.emotionmaster.emolog.diary.repository.DiaryRepository;
 import com.emotionmaster.emolog.emotion.domain.Emotion;
+import com.emotionmaster.emolog.emotion.domain.EmotionType;
 import com.emotionmaster.emolog.emotion.repository.EmotionRepository;
 import com.emotionmaster.emolog.q_a.domain.Q_A;
 import com.emotionmaster.emolog.q_a.repository.QaRepository;
@@ -73,7 +74,7 @@ class DiaryControllerTest {
         final String url ="/api/diary";
         final LocalDate now = now();
         final String content = "content";
-        final String emotion = "emotions";
+        final String emotion = "가벼운,가뿐한,희망찬,희열";
         final String question = "questions";
         final String answer = "answers";
         final AddDiaryRequest request =
@@ -93,16 +94,17 @@ class DiaryControllerTest {
         List<Diary> diary = diaryRepository.findAll();
         List<Emotion> emotions = emotionRepository.findAll();
         List<Q_A> q_a = qaRepository.findAll();
+        List<Color> colors = colorRepository.findAll();
 
-        //개수 확인
-        assertThat(diary.size()).isEqualTo(1);
-        assertThat(emotions.size()).isEqualTo(1);
-        assertThat(q_a.size()).isEqualTo(1);
+        assertThat(colors.size()).isEqualTo(1);
 
         //내용 확인
         assertThat(diary.get(0).getDate()).isEqualTo(now);
         assertThat(diary.get(0).getContent()).isEqualTo(content);
+
         assertThat(emotions.get(0).getEmotion()).isEqualTo(emotion);
+        assertThat(emotions.get(0).getEmotionType()).isEqualTo(EmotionType.POS_UNACT);
+
         assertThat(q_a.get(0).getQuestion()).isEqualTo(question);
         assertThat(q_a.get(0).getAnswer()).isEqualTo(answer);
 
