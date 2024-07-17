@@ -1,6 +1,5 @@
 package com.emotionmaster.emolog.user.domain;
 
-import com.emotionmaster.emolog.job.Job;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -48,21 +47,16 @@ public class User implements UserDetails {
     private int age;
 
 
-    @Column(name = "job" , nullable= false)
-    private Job job;
-
-
     // 유저 - 이메일, 비밀번호, 이름, 타입, 닉네임, 나이, 직업
     @Builder
     public User(String email, String password, String name,
-                String oauthType, String nickname, int age, Job job) {
+                String oauthType, String nickname, int age) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.oauthType =oauthType;
         this.age = age;
         this.nickname=nickname;
-        this.job=job;
     }
 
     // 리소스서버에서 제공받은 이름으로 값 업데이트
