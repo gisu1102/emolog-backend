@@ -1,4 +1,4 @@
-package com.emotionmaster.emolog.user.util;
+package com.emotionmaster.emolog.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

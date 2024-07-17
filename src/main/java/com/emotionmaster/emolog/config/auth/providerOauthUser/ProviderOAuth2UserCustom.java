@@ -1,4 +1,4 @@
-package com.emotionmaster.emolog.user.config.auth.providerOauthUser;
+package com.emotionmaster.emolog.config.auth.providerOauthUser;
 
 
 public interface ProviderOAuth2UserCustom {

@@ -1,11 +1,11 @@
-package com.emotionmaster.emolog.user.config.auth;
+package com.emotionmaster.emolog.config.auth;
 
-import com.emotionmaster.emolog.user.config.jwt.TokenProvider;
+import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.user.domain.RefreshToken;
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.repository.RefreshTokenRepository;
 import com.emotionmaster.emolog.user.service.UserService;
-import com.emotionmaster.emolog.user.util.CookieUtil;
+import com.emotionmaster.emolog.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

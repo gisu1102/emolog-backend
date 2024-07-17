@@ -1,6 +1,6 @@
-package com.emotionmaster.emolog.user.config.auth;
+package com.emotionmaster.emolog.config.auth;
 
-import com.emotionmaster.emolog.user.util.CookieUtil;
+import com.emotionmaster.emolog.util.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

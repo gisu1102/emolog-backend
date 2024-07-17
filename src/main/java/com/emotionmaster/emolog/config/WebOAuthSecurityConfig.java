@@ -1,13 +1,10 @@
-package com.emotionmaster.emolog.user.config;
+package com.emotionmaster.emolog.config;
 
 
-import com.emotionmaster.emolog.user.config.auth.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.emotionmaster.emolog.user.config.auth.OAuth2SuccessHandler;
-import com.emotionmaster.emolog.user.config.auth.OAuth2UserCustomService;
-import com.emotionmaster.emolog.user.config.jwt.JwtProperties;
-import com.emotionmaster.emolog.user.config.jwt.TokenProvider;
-import com.emotionmaster.emolog.user.domain.RefreshToken;
-import com.emotionmaster.emolog.user.domain.User;
+import com.emotionmaster.emolog.config.auth.OAuth2SuccessHandler;
+import com.emotionmaster.emolog.config.auth.OAuth2UserCustomService;
+import com.emotionmaster.emolog.config.auth.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.user.repository.RefreshTokenRepository;
 import com.emotionmaster.emolog.user.service.UserService;
 import lombok.RequiredArgsConstructor;
