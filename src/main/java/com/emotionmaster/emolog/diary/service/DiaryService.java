@@ -1,12 +1,16 @@
 package com.emotionmaster.emolog.diary.service;
 
+import com.emotionmaster.emolog.color.service.ColorService;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
 import com.emotionmaster.emolog.diary.repository.DiaryRepository;
+import com.emotionmaster.emolog.emotion.domain.Emotion;
+import com.emotionmaster.emolog.emotion.domain.EmotionType;
 import com.emotionmaster.emolog.emotion.repository.EmotionRepository;
 import com.emotionmaster.emolog.q_a.repository.QaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,10 +22,17 @@ public class DiaryService {
     private final EmotionRepository emotionRepository;
     private final DiaryRepository diaryRepository;
 
+    private final ColorService colorService;
+
+    @Transactional
     public Diary save(AddDiaryRequest request){
         Diary diary = diaryRepository.save(request.toDiaryEntity());
-        qaRepository.save(request.toQ_AEntity(diary));
-        emotionRepository.save(request.toEmotionEntity(diary));
+        qaRepository.save(request.toQ_AEntity(diary)); //Q_A 저장
+        EmotionType emotionType = colorService.save(request.getEmotion(), diary);
+        //오늘의 색 저장과 감정들의 type 반환
+        Emotion emotion = emotionRepository.save(request.toEmotionEntity(diary));
+        //감정 저장
+        emotion.toEmotionType(emotionType); //감정 type 저장
         return diary;
     }
 
