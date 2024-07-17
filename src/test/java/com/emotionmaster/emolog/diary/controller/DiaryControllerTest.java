@@ -1,5 +1,7 @@
 package com.emotionmaster.emolog.diary.controller;
 
+import com.emotionmaster.emolog.color.domain.Color;
+import com.emotionmaster.emolog.color.repository.ColorRepository;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
 import com.emotionmaster.emolog.diary.dto.request.Qa;
@@ -29,6 +31,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest //test용 application context
@@ -45,6 +49,9 @@ class DiaryControllerTest {
 
     @Autowired
     DiaryRepository diaryRepository;
+
+    @Autowired
+    ColorRepository colorRepository;
 
     @Autowired
     EmotionRepository emotionRepository;
