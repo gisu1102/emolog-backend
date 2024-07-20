@@ -11,6 +11,7 @@ import com.emotionmaster.emolog.emotion.domain.EmotionType;
 import com.emotionmaster.emolog.emotion.repository.EmotionRepository;
 import com.emotionmaster.emolog.q_a.domain.Q_A;
 import com.emotionmaster.emolog.q_a.repository.QaRepository;
+import com.emotionmaster.emolog.util.DateUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -118,7 +119,7 @@ class DiaryControllerTest {
     @Test
     public void deleteDiary() throws Exception {
         final String url = "/api/diary/{id}";
-        Diary diary = diaryRepository.save(new Diary(LocalDate.now(), "content"));
+        Diary diary = diaryRepository.save(new Diary(LocalDate.now(), "content", DateUtil.getWeekOfMonthByDate(LocalDate.now())));
 
         ResultActions results = mockMvc.perform(delete(url,diary.getId()));
 
