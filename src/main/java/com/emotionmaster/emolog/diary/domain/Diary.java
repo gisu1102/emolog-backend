@@ -25,6 +25,9 @@ public class Diary extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    @Column(name="date_week", nullable = false)
+    private Integer week;
+
     //mappedBy는 누가 이 객체를 관리할 것인지 정의 하는 것으로 !정의 되지 않은 객체가 주인이 된다!
     // 여기서는 모두 diary 객체가 주인이 아니다!!! Diary 객체에서는 조회만 가능, 수정 불가
     // 얘랑 쟤랑 묶였구나~~ 를 명시해주는 것이라고 생각하면 된다.
@@ -42,8 +45,9 @@ public class Diary extends BaseEntity {
     private Color color;
 
     @Builder
-    public Diary(LocalDate date, String content) {
+    public Diary(LocalDate date, String content, Integer week) {
         this.date = date;
         this.content = content;
+        this.week = week;
     }
 }
