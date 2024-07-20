@@ -2,6 +2,8 @@ package com.emotionmaster.emolog.diary.controller;
 
 import com.emotionmaster.emolog.color.domain.Color;
 import com.emotionmaster.emolog.color.repository.ColorRepository;
+import com.emotionmaster.emolog.comment.domain.Comment;
+import com.emotionmaster.emolog.comment.repository.CommentRepository;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
 import com.emotionmaster.emolog.diary.dto.request.Qa;
@@ -58,6 +60,9 @@ class DiaryControllerTest {
     @Autowired
     QaRepository qaRepository;
 
+    @Autowired
+    CommentRepository commentRepository;
+
     @BeforeEach
     public void setMockMvc(){
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
@@ -109,6 +114,12 @@ class DiaryControllerTest {
         //join 확인
         assertThat(emotions.get(0).getDiary().getId()).isEqualTo(diary.get(0).getId());
         assertThat(q_a.get(0).getDiary().getId()).isEqualTo(diary.get(0).getId());
+
+        //코멘트 추가
+        Comment comment = diary.get(0).getComment();
+
+        assertThat(comment.getType()).isEqualTo(EmotionType.POS_UNACT);
+        assertThat(comment.getComment()).isEqualTo(commentRepository.findById(comment.getId()).get().getComment());
 
     }
 
