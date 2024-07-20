@@ -1,6 +1,7 @@
 package com.emotionmaster.emolog.diary.domain;
 
 import com.emotionmaster.emolog.color.domain.Color;
+import com.emotionmaster.emolog.comment.domain.Comment;
 import com.emotionmaster.emolog.emotion.domain.Emotion;
 import com.emotionmaster.emolog.config.BaseEntity;
 import com.emotionmaster.emolog.q_a.domain.Q_A;
@@ -35,6 +36,10 @@ public class Diary extends BaseEntity {
     //cascade는 부모의 영속성 상태를 자식에게 전이하겠다.
     //CascadeType.REMOVE 는 부모가 지워질 때, 자식들도 같이 지워진다는 것
 
+    @ManyToOne()
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+
     @OneToOne(mappedBy = "diary", cascade = CascadeType.REMOVE)
     private Q_A q_a;
 
@@ -49,5 +54,9 @@ public class Diary extends BaseEntity {
         this.date = date;
         this.content = content;
         this.week = week;
+    }
+
+    public void toComment(Comment comment){
+        this.comment = comment;
     }
 }

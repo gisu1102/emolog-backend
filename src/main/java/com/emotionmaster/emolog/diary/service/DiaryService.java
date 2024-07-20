@@ -1,6 +1,7 @@
 package com.emotionmaster.emolog.diary.service;
 
 import com.emotionmaster.emolog.color.service.ColorService;
+import com.emotionmaster.emolog.comment.service.CommentService;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
 import com.emotionmaster.emolog.diary.repository.DiaryRepository;
@@ -23,6 +24,8 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
 
     private final ColorService colorService;
+    private final CommentService commentService;
+
 
     @Transactional
     public Diary save(AddDiaryRequest request){
@@ -33,6 +36,8 @@ public class DiaryService {
         Emotion emotion = emotionRepository.save(request.toEmotionEntity(diary));
         //감정 저장
         emotion.toEmotionType(emotionType); //감정 type 저장
+        //감정 타입에 따른 코멘트 저장
+        diary.toComment(commentService.getComment(emotionType));
         return diary;
     }
 
