@@ -1,4 +1,4 @@
-package com.emotionmaster.emolog.user.service;
+package com.emotionmaster.emolog.user.controller;
 
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
