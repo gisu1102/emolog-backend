@@ -62,10 +62,12 @@ class ColorControllerTest {
         final LocalDate date1 = LocalDate.of(2024, 1, 20);
         final LocalDate date7 = LocalDate.of(2024, 7, 20);
 
-        Diary diaryOf7 = diaryRepository.save(new Diary(date7, content7, DateUtil.getWeekOfMonthByDate(date7)));
+        Diary diaryOf7 = diaryRepository.save(new Diary(date7, content7,
+                DateUtil.getWeekOfMonthByDate(date7), date7.getDayOfWeek()));
         colorRepository.save(new Color(0, 0, 0, color7, diaryOf7));
 
-        Diary diaryOf1 = diaryRepository.save(new Diary(date1, content1, DateUtil.getWeekOfMonthByDate(date1)));
+        Diary diaryOf1 = diaryRepository.save(new Diary(date1, content1,
+                DateUtil.getWeekOfMonthByDate(date1), date1.getDayOfWeek()));
         colorRepository.save(new Color(0, 0, 0, color1, diaryOf1));
 
         // Test for July (month 7)
@@ -99,10 +101,12 @@ class ColorControllerTest {
         final LocalDate dateOfWeek4 = LocalDate.of(2024, 7, 21);
         final LocalDate dateOfWeek3 = LocalDate.of(2024, 7, 20);
 
-        Diary diaryOf7 = diaryRepository.save(new Diary(dateOfWeek3, content7, DateUtil.getWeekOfMonthByDate(dateOfWeek3)));
+        Diary diaryOf7 = diaryRepository.save(new Diary(dateOfWeek3, content7,
+                DateUtil.getWeekOfMonthByDate(dateOfWeek3), dateOfWeek3.getDayOfWeek()));
         colorRepository.save(new Color(0, 0, 0, color7, diaryOf7));
 
-        Diary diaryOf1 = diaryRepository.save(new Diary(dateOfWeek4, content1, DateUtil.getWeekOfMonthByDate(dateOfWeek4)));
+        Diary diaryOf1 = diaryRepository.save(new Diary(dateOfWeek4, content1,
+                DateUtil.getWeekOfMonthByDate(dateOfWeek4), dateOfWeek4.getDayOfWeek()));
         colorRepository.save(new Color(0, 0, 0, color1, diaryOf1));
 
         // Test for July (month 7)
