@@ -32,8 +32,8 @@ import java.util.List;
 
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest //test용 application context
@@ -67,11 +67,12 @@ class DiaryControllerTest {
     public void setMockMvc(){
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .build();
-        diaryRepository.deleteAll();
+//        diaryRepository.deleteAll();
     }
 
     @DisplayName("saveDiary() : 전달받은 일기와 Q&A, 감정까지 모두 저장한다.")
     @Test
+    @BeforeEach
     public void saveDiary() throws Exception{
         //given
         final String url ="/api/diary";
@@ -127,7 +128,8 @@ class DiaryControllerTest {
     @Test
     public void deleteDiary() throws Exception {
         final String url = "/api/diary/{id}";
-        Diary diary = diaryRepository.save(new Diary(LocalDate.now(), "content", DateUtil.getWeekOfMonthByDate(LocalDate.now())));
+        Diary diary = diaryRepository.save(
+                new Diary(LocalDate.now(), "content", DateUtil.getWeekOfMonthByDate(LocalDate.now()), LocalDate.now().getDayOfWeek()));
 
         ResultActions results = mockMvc.perform(delete(url,diary.getId()));
 
@@ -136,6 +138,23 @@ class DiaryControllerTest {
         results.andExpect(status().isOk());
 
         assertThat(diaryList.size()).isZero();
+    }
 
+    @DisplayName("getSummary() : id 값에 맞춰 일기 요약본을 가져온다.")
+    @Test
+    public void getSummary() throws Exception{
+        final String url = "/api/diary/{id}";
+        final long id = 1;
+
+        ResultActions result = mockMvc.perform(get(url, id)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+
+        System.out.println(result.andReturn().getResponse().getContentAsString());
+
+        result.andExpect(jsonPath("$.color").isNotEmpty())
+                .andExpect(jsonPath("$.diary").isNotEmpty())
+                .andExpect(jsonPath("$.emotion").isNotEmpty())
+                .andExpect(jsonPath("$.comment").isNotEmpty());
     }
 }
