@@ -31,19 +31,19 @@ public class User implements UserDetails {
     @Column(name = "email" , nullable= false)
     private String email;
 
-    @Column(name = "password" , nullable= false)
+    @Column(name = "password" )
     private String password;
 
-    @Column(name = "name" , nullable= false)
+    @Column(name = "name" )
     private String name;
 
-    @Column(name = "oauthType" , nullable= false)
+    @Column(name = "oauthType" )
     private String oauthType;
 
-    @Column(name = "nickname" , nullable= false)
+    @Column(name = "nickname" )
     private String nickname;
 
-    @Column(name = "age" , nullable= false)
+    @Column(name = "age" )
     private int age;
 
 
@@ -57,6 +57,13 @@ public class User implements UserDetails {
         this.oauthType =oauthType;
         this.age = age;
         this.nickname=nickname;
+    }
+
+    @Builder(toBuilder = true)
+    public User(String nickname, int age,
+                String oauthType) {
+        this.nickname = nickname;
+        this.age = age;
     }
 
     // 리소스서버에서 제공받은 이름으로 값 업데이트
@@ -77,7 +84,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return this.name;
     }
 
     @Override

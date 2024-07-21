@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 //OAuth 에서 제공하는 정보 기반으로 유저 객체 관리해주는 메소드 loadUser 활용
@@ -40,6 +41,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         }
         return oAuth2User;
     }
+
 
     //각 플랫폼 별 추출한 정보 db저장
     private User saveOrUpdate(ProviderOAuth2UserCustom providerOAuth2UserCusotom) {

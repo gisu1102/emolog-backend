@@ -22,7 +22,6 @@ public class TokenApiController {
     @PostMapping("/api/token")
     public ResponseEntity<TokenResponseDto> createNewAccessToken(@RequestBody TokenRequestDto request) {
         String newAccessToken = tokenService.createNewAccessToken(request.getRefreshToken());
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new TokenResponseDto(newAccessToken));
     }
@@ -31,7 +30,6 @@ public class TokenApiController {
     @DeleteMapping("/api/refresh-token")
     public ResponseEntity deleteRefreshToken() {
         refreshTokenService.delete();
-
         return ResponseEntity.ok()
                 .build();
     }

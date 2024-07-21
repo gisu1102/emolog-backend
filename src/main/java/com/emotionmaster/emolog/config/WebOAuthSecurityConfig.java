@@ -69,12 +69,14 @@ public class WebOAuthSecurityConfig {
         ///api 경로는 인증된 사용자만
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/token").permitAll()
+                .requestMatchers("/api/refresh-token").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
         );
 
         //OAuth2 로그인 구성
         http.oauth2Login(oauth2 -> oauth2
+                //로그인 페이지로 리다이렉트
                 .loginPage("/login")
                 //인증요청 쿠키에 기반한 저장소에 저장
                 .authorizationEndpoint(authorization -> authorization
