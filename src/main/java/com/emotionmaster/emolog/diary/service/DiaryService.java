@@ -4,6 +4,7 @@ import com.emotionmaster.emolog.color.service.ColorService;
 import com.emotionmaster.emolog.comment.service.CommentService;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
+import com.emotionmaster.emolog.diary.dto.response.SummaryDiaryResponse;
 import com.emotionmaster.emolog.diary.repository.DiaryRepository;
 import com.emotionmaster.emolog.emotion.domain.Emotion;
 import com.emotionmaster.emolog.emotion.domain.EmotionType;
@@ -13,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +44,15 @@ public class DiaryService {
 
     public void delete(long id){
         diaryRepository.deleteById(id);
+    }
+
+    public SummaryDiaryResponse getSummary(long id) {
+        Optional<Diary> diary = diaryRepository.findById(id);
+        if (diary.isPresent()){
+            SummaryDiaryResponse response = new SummaryDiaryResponse();
+            response.toSummary(diary.get());
+            return response;
+        }
+        return null;
     }
 }

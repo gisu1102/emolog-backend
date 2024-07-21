@@ -3,15 +3,12 @@ package com.emotionmaster.emolog.diary.controller;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
 import com.emotionmaster.emolog.diary.dto.response.AddDiaryResponse;
+import com.emotionmaster.emolog.diary.dto.response.SummaryDiaryResponse;
 import com.emotionmaster.emolog.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/diary")
@@ -32,5 +29,11 @@ public class DiaryController {
         diaryService.delete(id);
         return ResponseEntity.ok()
                 .build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SummaryDiaryResponse> getSummary(@PathVariable("id") long id){
+        return ResponseEntity.ok()
+                .body(diaryService.getSummary(id));
     }
 }
