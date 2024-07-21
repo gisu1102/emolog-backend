@@ -7,7 +7,7 @@ import com.emotionmaster.emolog.user.dto.response.UserResponseDto;
 import com.emotionmaster.emolog.user.repository.UserRepository;
 import com.emotionmaster.emolog.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,34 +15,36 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserApiControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    protected MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
 
     @Autowired
     private WebApplicationContext context;
@@ -50,102 +52,123 @@ class UserApiControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    private User user;
 
-    @MockBean
-    private UserService userService;
+    User user;
 
     @BeforeEach
     public void setUp() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         userRepository.deleteAll();
-
         user = userRepository.save(User.builder()
-                .email("user@example.com")
-                .password("password")
+                .email("user@gmail.com")
+                .password("test")
                 .nickname("nickname")
-                .age(30)
+                .age(25)
+                .oauthType("google")
                 .build());
 
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()));
     }
 
-    @Test
-    @DisplayName("로그아웃: 로그아웃을 수행하고 결과를 반환한다.")
-    public void logout() throws Exception {
-        // given
-        Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("message", "Logout successful");
-
-        when(userService.logout(Mockito.any(HttpServletResponse.class)))
-                .thenReturn(responseMap);
-
-        // when
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/logout")
-                .contentType(MediaType.APPLICATION_JSON_VALUE));
-
-        // then
-        resultActions
-                .andExpect(status().isOk()) //
-                .andExpect(status().isOk()) // 상태 코드 확인
-                .andExpect(content().json(objectMapper.writeValueAsString(responseMap))); // 응답 내용 확인
-    }
-
-
-    @DisplayName("회원 수정: 유저 정보를 업데이트한다.")
+    @DisplayName("updateUser: 사용자 정보 업데이트에 성공한다.")
     @Test
     public void updateUser() throws Exception {
         // given
-        final String url = "/api/updateUser/" + user.getId(); // 경로 수정
+        final String url = "/api/updateUser/{id}";
+        final Long userId = user.getId();
+        final String newEmail = "newemail@gmail.com";
+        final String newNickname = "newnickname";
+        final int newAge = 30;
+
         UserRequestDto requestDto = new UserRequestDto();
-        requestDto.setNickname("newNickname");
-        requestDto.setAge(35);
+        requestDto.setEmail(newEmail);
+        requestDto.setNickname(newNickname);
+        requestDto.setAge(newAge);
 
         final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         // when
-        ResultActions resultActions = mockMvc.perform(put(url)
+        ResultActions result = mockMvc.perform(put(url, userId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(requestBody));
 
         // then
-        resultActions
-                .andExpect(status().isOk()) // 상태 코드 수정
-                .andExpect(jsonPath("$.nickname").value("newNickname"))
-                .andExpect(jsonPath("$.age").value(35));
-    }
-    @DisplayName("회원 조회: 유저 정보를 조회한다.")
-    @Test
-    public void getUserInfo() throws Exception {
-        // given
-        final String url = "/api/userInfo/" + user.getId();
-
-        // when
-        ResultActions resultActions = mockMvc.perform(get(url)
-                .contentType(MediaType.APPLICATION_JSON_VALUE));
-
-        // then
-        resultActions
-                .andExpect(status().isOk())
-                 .andExpect(jsonPath("$.nickname").value("nickname"))
-                .andExpect(jsonPath("$.age").value(30));
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.nickname").value(newNickname))
+                .andExpect(jsonPath("$.age").value(newAge));
     }
 
-    @DisplayName("회원 탈퇴: 유저를 삭제한다.")
+    @DisplayName("userInfo: 사용자 정보 조회에 성공한다.")
     @Test
-    public void deleteUser() throws Exception {
+    public void userInfo() throws Exception {
         // given
-        final String url = "/api/userDelete/" + user.getId();
+        final String url = "/api/userInfo/{id}";
+        final Long userId = user.getId();
 
         // when
-        ResultActions resultActions = mockMvc.perform(delete(url)
-                .contentType(MediaType.APPLICATION_JSON_VALUE));
+        ResultActions result = mockMvc.perform(get(url, userId)
+                .accept(MediaType.APPLICATION_JSON));
 
         // then
-        resultActions
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.nickname").value(user.getNickname()))
+                .andExpect(jsonPath("$.age").value(user.getAge()));
+    }
+
+    @DisplayName("userDelete: 사용자 삭제에 성공한다.")
+    @Test
+    public void userDelete() throws Exception {
+        // given
+        final String url = "/api/userDelete/{id}";
+        final Long userId = user.getId();
+
+        // when
+        mockMvc.perform(delete(url, userId))
                 .andExpect(status().isNoContent());
 
-        assertThat(userRepository.findById(user.getId())).isEmpty();
+        // then
+        assertThat(userRepository.findById(userId)).isEmpty();
     }
+
+    @DisplayName("logout: 구글 로그아웃에 성공한다.")
+    @Test
+    public void logout() throws Exception {
+        // given
+        final String url = "/logout/{id}";
+        final Long userId = user.getId();
+        final String accessToken = "dummyAccessToken"; // Mocked access token
+
+        // when
+        ResultActions result = mockMvc.perform(post(url, userId)
+                .header("Authorization", "Bearer " + accessToken)
+                .cookie(new Cookie("access_token", "dummyToken")));
+
+        // then
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Logout successful"));
+
+        MockHttpServletResponse response = result.andReturn().getResponse();
+        Cookie[] cookies = response.getCookies();
+
+        assertThat(cookies).isNotNull();
+        boolean cookieCleared = false;
+
+        for (Cookie cookie : cookies) {
+            if ("access_token".equals(cookie.getName())) {
+                //쿠키값 비어있는지 확인
+                assertThat(cookie.getValue()).isEmpty();
+                //만료시간 =0
+                assertThat(cookie.getMaxAge()).isEqualTo(0);
+                //사이트의 모든 경로에서 유효한지
+                assertThat(cookie.getPath()).isEqualTo("/");
+                assertThat(cookie.isHttpOnly()).isTrue();
+                //https 에서만
+                assertThat(cookie.getSecure()).isTrue();
+                cookieCleared = true;
+            }
+        }
+
+        assertThat(cookieCleared).isTrue();
+    }
+
 }
