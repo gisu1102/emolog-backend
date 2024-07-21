@@ -48,20 +48,18 @@ public class User implements UserDetails {
 
 
     // 유저 - 이메일, 비밀번호, 이름, 타입, 닉네임, 나이, 직업
-    @Builder
-    public User(String email, String password, String name,
-                String oauthType, String nickname, int age) {
+    @Builder(toBuilder = true)
+    public User(String email, String password, String name, String oauthType, String nickname, int age) {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.oauthType =oauthType;
+        this.oauthType = oauthType;
+        this.nickname = nickname;
         this.age = age;
-        this.nickname=nickname;
     }
 
     @Builder(toBuilder = true)
-    public User(String nickname, int age,
-                String oauthType) {
+    public User(String nickname, int age) {
         this.nickname = nickname;
         this.age = age;
     }

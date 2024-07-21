@@ -27,6 +27,7 @@ public class TokenApiController {
     }
 
 
+    //Refresh Token 삭제 APi (서버측)
     @DeleteMapping("/api/refresh-token")
     public ResponseEntity deleteRefreshToken() {
         refreshTokenService.delete();

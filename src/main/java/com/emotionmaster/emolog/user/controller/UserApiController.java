@@ -9,6 +9,7 @@ import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
 import com.emotionmaster.emolog.user.dto.response.UserInfoResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserResponseDto;
 import com.emotionmaster.emolog.user.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,31 +34,29 @@ public class UserApiController {
         return "oauthLogin";
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-        return "redirect:/login";
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout(HttpServletResponse response) {
+        Map<String, String> result = userService.logout(response);
+        return ResponseEntity.ok(result);
     }
-
     //회원 정보 무엇을 수정할지 정하기
     @PutMapping("/api/updateUser/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id , @RequestBody UserRequestDto request){
         UserResponseDto updatedUser = userService.update(id,request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(updatedUser);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @GetMapping("/api/userInfo/{id}")
     public ResponseEntity<UserInfoResponseDto> userInfo(@PathVariable Long id){
         UserInfoResponseDto infoUser = userService.info(id);
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(infoUser);
     }
 
     @DeleteMapping("/api/userDelete/{id}")
     public ResponseEntity<Void> userDelete(@PathVariable Long id){
         userService.delete(id);
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
                 .build();
     }
 
