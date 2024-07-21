@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.WebUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class UserService {
 
     //구글 로그아웃 url
     String googleLogoutUrl = "https://accounts.google.com/Logout";
-
+    String kakaoLogoutUrl ="https://kapi.kakao.com/v1/user/logout";
     public Long save(UserRequestDto dto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -39,23 +40,42 @@ public class UserService {
     }
 
 
-    public Map<String, String> logout(HttpServletResponse response) {
+    public Map<String, String> logout(HttpServletResponse response, Long id ,String accessToken ) {
 
-        //클라이언트 측 쿠키 제거
-        Cookie cookie = new Cookie("access_token" , null);
+        User user = findById(id);
+
+        //각 플랫폼 별 로그아웃 엔드 포인트 (플랫폼 세션에서 제거)
+        // 같은 아이디로 다른 애플리케이션에서 접속 했을시 재인증
+        //네이버의 경우 로그아웃 api 지원 x
+        try {
+            switch (user.getOauthType()) {
+                case "google":
+                    restTemplate.getForObject(googleLogoutUrl, String.class);
+                    break;
+                case "kakao":
+                    restTemplate.postForObject(kakaoLogoutUrl, null, String.class, "Bearer " + accessToken);
+                    break;
+                case "naver":
+                    // 네이버의 경우, 엔드포인트 호출 없이 쿠키만 삭제
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported provider: " + user.getOauthType());
+            }
+        } catch (Exception e) {
+            // 로그아웃 실패 처리 (예: 로그 기록)
+            e.printStackTrace();
+        }
+
+        //클라이언트 측 쿠키 제거 (Null -> 빈 문자열)
+        //모호성 해결 - null 인경우 이름 설정에 오류가 있음을 나타낼수도 있음
+        //http 표준 규격
+        Cookie cookie = new Cookie("access_token" , "");
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(0); // 쿠키 만료
         response.addCookie(cookie);
 
-        //구글 로그아웃 엔드 포인트 (세션에서 구글 로그인 제거)
-        try {
-            //get 요청 보낸후 응답 본문 문자열로 받음
-            restTemplate.getForObject(googleLogoutUrl, String.class);
-        } catch (Exception e) {
-            // 로그아웃 실패 처리
-        }
 
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", "Logout successful");

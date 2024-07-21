@@ -34,9 +34,9 @@ public class UserApiController {
         return "oauthLogin";
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<Map<String, String>> logout(HttpServletResponse response) {
-        Map<String, String> result = userService.logout(response);
+    @PostMapping("/logout/{id}")
+    public ResponseEntity<Map<String, String>> logout(HttpServletResponse response , @PathVariable Long id , @RequestHeader("Authorization") String accessToken) {
+        Map<String, String> result = userService.logout(response, id , accessToken);
         return ResponseEntity.ok(result);
     }
     //회원 정보 무엇을 수정할지 정하기
