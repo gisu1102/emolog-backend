@@ -69,7 +69,8 @@ public class WebOAuthSecurityConfig {
         ///api 경로는 인증된 사용자만
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/token").permitAll()
-                .requestMatchers("/api/**").authenticated()
+                .requestMatchers("/api/**").permitAll()
+                //todo 잠깐 열어둠
                 .anyRequest().permitAll()
         );
 
