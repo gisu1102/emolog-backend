@@ -143,7 +143,7 @@ class DiaryControllerTest {
     @DisplayName("getSummary() : id 값에 맞춰 일기 요약본을 가져온다.")
     @Test
     public void getSummary() throws Exception{
-        final String url = "/api/diary/{id}";
+        final String url = "/api/diary/summary/{id}";
         final long id = 1;
 
         ResultActions result = mockMvc.perform(get(url, id)
@@ -156,5 +156,24 @@ class DiaryControllerTest {
                 .andExpect(jsonPath("$.diary").isNotEmpty())
                 .andExpect(jsonPath("$.emotion").isNotEmpty())
                 .andExpect(jsonPath("$.comment").isNotEmpty());
+    }
+
+    @DisplayName("getDiary() : id 값에 맞춰 일기를 가져온다.")
+    @Test
+    public void getDiary() throws Exception{
+        final String url = "/api/diary/{id}";
+        final long id = 1;
+
+        ResultActions result = mockMvc.perform(get(url, id)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+
+        System.out.println(result.andReturn().getResponse().getContentAsString());
+
+        result.andExpect(jsonPath("$.color").isNotEmpty())
+                .andExpect(jsonPath("$.diary").isNotEmpty())
+                .andExpect(jsonPath("$.emotion").isNotEmpty())
+                .andExpect(jsonPath("$.comment").isNotEmpty())
+                .andExpect(jsonPath("$.q_a").isNotEmpty());
     }
 }
