@@ -3,6 +3,7 @@ package com.emotionmaster.emolog.diary.controller;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
 import com.emotionmaster.emolog.diary.dto.response.AddDiaryResponse;
+import com.emotionmaster.emolog.diary.dto.response.GetDiaryResponse;
 import com.emotionmaster.emolog.diary.dto.response.SummaryDiaryResponse;
 import com.emotionmaster.emolog.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +32,15 @@ public class DiaryController {
                 .build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/summary/{id}")
     public ResponseEntity<SummaryDiaryResponse> getSummary(@PathVariable("id") long id){
         return ResponseEntity.ok()
                 .body(diaryService.getSummary(id));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GetDiaryResponse> getDiary(@PathVariable("id") long id){
+        return ResponseEntity.ok()
+                .body(diaryService.getDiary(id));
     }
 }
