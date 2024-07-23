@@ -28,35 +28,40 @@ public class User implements UserDetails {
     @Column(name = "id", updatable = false)
     private long id;
 
-    @Column(name = "email" , nullable= false)
+    @Column(name = "email" , nullable= false, unique = true)
     private String email;
 
-    @Column(name = "password" , nullable= false)
+    @Column(name = "password" )
     private String password;
 
-    @Column(name = "name" , nullable= false)
+    @Column(name = "name" )
     private String name;
 
-    @Column(name = "oauthType" , nullable= false)
+    @Column(name = "oauthType" )
     private String oauthType;
 
-    @Column(name = "nickname" , nullable= false)
+    @Column(name = "nickname" )
     private String nickname;
 
-    @Column(name = "age" , nullable= false)
+    @Column(name = "age" )
     private int age;
 
 
     // 유저 - 이메일, 비밀번호, 이름, 타입, 닉네임, 나이, 직업
-    @Builder
-    public User(String email, String password, String name,
-                String oauthType, String nickname, int age) {
+    @Builder(toBuilder = true)
+    public User(String email, String password, String name, String oauthType, String nickname, int age) {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.oauthType =oauthType;
+        this.oauthType = oauthType;
+        this.nickname = nickname;
         this.age = age;
-        this.nickname=nickname;
+    }
+
+    @Builder(toBuilder = true)
+    public User(String nickname, int age) {
+        this.nickname = nickname;
+        this.age = age;
     }
 
     // 리소스서버에서 제공받은 이름으로 값 업데이트
@@ -75,9 +80,10 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority("user"));
     }
 
+    //email - unique 설정 후 변경
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 
     @Override

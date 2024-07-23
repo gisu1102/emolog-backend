@@ -1,4 +1,10 @@
 spring:
+
+  sql:
+    init:
+      mode: always
+#      schema-locations: classpath:scheme-default_emotion.sql
+
   datasource:
     driver-class-name: org.h2.Driver
     url : 'jdbc:h2:~/test'
@@ -8,14 +14,13 @@ spring:
       enabled: true
       path: /h2-console
   jpa:
-    show-sql: true
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.H2Dialect #추가
+        show_sql: true
     hibernate:
-      ddl-auto: create-drop
-    database-platform: org.hibernate.dialect.H2Dialect #추가
+      ddl-auto: create
+    defer-datasource-initialization: true
   security:
     oauth2:
       client:

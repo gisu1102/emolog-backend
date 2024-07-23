@@ -19,6 +19,8 @@ public class RefreshTokenService {
                 .orElseThrow(()-> new IllegalArgumentException("Unexpected token"));
     }
 
+
+    //로그아웃시 인증정보 바탕으로 해당 아이디 리프레시 토큰 삭제
     @Transactional
     public void delete() {
         String token = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
