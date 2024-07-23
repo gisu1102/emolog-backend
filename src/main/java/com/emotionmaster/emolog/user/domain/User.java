@@ -28,7 +28,7 @@ public class User implements UserDetails {
     @Column(name = "id", updatable = false)
     private long id;
 
-    @Column(name = "email" , nullable= false)
+    @Column(name = "email" , nullable= false, unique = true)
     private String email;
 
     @Column(name = "password" )
@@ -80,9 +80,10 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority("user"));
     }
 
+    //email - unique 설정 후 변경
     @Override
     public String getUsername() {
-        return this.name;
+        return email;
     }
 
     @Override

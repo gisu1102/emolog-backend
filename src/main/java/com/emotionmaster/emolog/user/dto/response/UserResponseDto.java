@@ -8,8 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserResponseDto {
-    private String email;
-    private String password;
     private String nickname;
     private int age;
 
