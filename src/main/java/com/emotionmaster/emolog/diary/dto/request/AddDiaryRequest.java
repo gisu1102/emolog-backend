@@ -24,6 +24,7 @@ public class AddDiaryRequest {
                 .date(date)
                 .content(content)
                 .week(DateUtil.getWeekOfMonthByDate(date))
+                .dayOfWeek(date.getDayOfWeek())
                 .build();
     }
 

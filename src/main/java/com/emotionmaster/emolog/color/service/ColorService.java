@@ -5,7 +5,6 @@ import com.emotionmaster.emolog.color.dto.response.ColorAndDate;
 import com.emotionmaster.emolog.color.dto.response.ColorResponse;
 import com.emotionmaster.emolog.color.repository.ColorRepository;
 import com.emotionmaster.emolog.diary.domain.Diary;
-import com.emotionmaster.emolog.diary.repository.DiaryRepository;
 import com.emotionmaster.emolog.emotion.domain.EmotionType;
 import com.emotionmaster.emolog.emotion.repository.DefaultEmotionRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ColorService {
 
-    private final DiaryRepository diaryRepository;
     private final ColorRepository colorRepository;
     private final DefaultEmotionRepository defaultEmotionRepository;
 
