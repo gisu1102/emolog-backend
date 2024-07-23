@@ -1,5 +1,7 @@
 package com.emotionmaster.emolog.user.domain;
 
+import com.emotionmaster.emolog.comment.domain.Comment;
+import com.emotionmaster.emolog.diary.domain.Diary;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,6 +22,13 @@ import java.util.List;
 @Entity
 //Spring Security 사용하기위해 Userdetails 상속받기
 public class User implements UserDetails {
+
+    @ManyToOne
+    @JoinColumn(name = "diary_id")
+    private Diary diary;
+
+
+
     @Id
     //기본 키값 자동 생성 + 자동 증가
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -100,5 +100,14 @@ public class UserApiController {
     }
 
 
+    //이번 달 일기 개수 조회
+    @GetMapping("/api/userDiary/{id}")
+    public long countUserDiarybyMonth(@PathVariable Long id) {
+        User user = userService.findById(id);
+
+        return userService.getDiaryCountForUserThisMonth(id);
+    }
+
+
 }
 

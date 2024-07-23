@@ -1,5 +1,6 @@
 package com.emotionmaster.emolog.user.service;
 
+import com.emotionmaster.emolog.diary.repository.DiaryRepository;
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
 import com.emotionmaster.emolog.user.dto.response.UserInfoResponseDto;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final DiaryRepository diaryRepository;
     //restTemplate 주입
     RestTemplate restTemplate = new RestTemplate();
 
@@ -118,5 +120,10 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+    }
+
+    public long getDiaryCountForUserThisMonth(Long userId) {
+
+        return diaryRepository.countDiariesForUserThisMonth(userId);
     }
 }
