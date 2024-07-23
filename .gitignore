@@ -7,7 +7,7 @@ build/
 
 build.gradle
 application.yml
-
+src/main/resources/application.yml
 ### STS ###
 .apt_generated
 .classpath
@@ -38,3 +38,5 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
