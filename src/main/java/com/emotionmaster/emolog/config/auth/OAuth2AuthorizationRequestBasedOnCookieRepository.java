@@ -11,7 +11,7 @@ import org.springframework.web.util.WebUtils;
 
 
 //OAuth2 인증요청 쿠키에 저장 및 관리하는 역할
-@Repository
+
 public class OAuth2AuthorizationRequestBasedOnCookieRepository implements
         AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 

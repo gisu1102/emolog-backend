@@ -47,6 +47,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 
         log.info("successHandler");
+        String code = request.getParameter("code");
+        log.info("authorization code: " + code);
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         log.info("OAuth2User: {}", oAuth2User);
@@ -116,7 +118,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             return "google";
         } else if (attributes.containsKey("id") && attributes.containsKey("kakao_account")) {
             return "kakao";
-        } else if (attributes.containsKey("id") && attributes.containsKey("email")) {
+        } else if (attributes.containsKey("resultcode")) {
             return "naver";
         } else {
             throw new IllegalArgumentException("Unsupported provider");
