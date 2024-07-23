@@ -4,6 +4,7 @@ package com.emotionmaster.emolog.config;
 import com.emotionmaster.emolog.config.auth.OAuth2SuccessHandler;
 import com.emotionmaster.emolog.config.auth.OAuth2UserCustomService;
 import com.emotionmaster.emolog.config.auth.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserGoogle;
 import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.user.repository.RefreshTokenRepository;
 import com.emotionmaster.emolog.user.service.UserService;
@@ -22,6 +23,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.client.RestTemplate;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
@@ -35,9 +37,9 @@ public class WebOAuthSecurityConfig {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserService userService;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
-    //h2, img css js 에 대한 스프링 시큐리티 비활성화
+
+   //h2, img css js 에 대한 스프링 시큐리티 비활성화
     //나중에 추가 설정 mysql 이미지 등등
     @Bean
     public WebSecurityCustomizer configure() {
@@ -69,26 +71,30 @@ public class WebOAuthSecurityConfig {
         ///api 경로는 인증된 사용자만
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/token").permitAll()
+                .requestMatchers("/api/refresh-token").permitAll()
+                .requestMatchers("/login/oauth2/code/google").permitAll() // 추가
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
         );
 
         //OAuth2 로그인 구성
         http.oauth2Login(oauth2 -> oauth2
-                .loginPage("/login")
+                //로그인 페이지로 리다이렉트
+                //
                 //인증요청 쿠키에 기반한 저장소에 저장
                 .authorizationEndpoint(authorization -> authorization
                         .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
                 )
+
                 //로그인 성공 핸들러
-                .successHandler(oAuth2SuccessHandler)
+                .successHandler(oAuth2SuccessHandler())
                 //사용자 정보 가져우기
                 .userInfoEndpoint(userInfo -> userInfo
                         .userService(oAuth2UserCustomService)
                 )
         );
         http.logout(logout -> logout
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl("/")
         );
 
         //예외처리
@@ -103,6 +109,14 @@ public class WebOAuthSecurityConfig {
 
 
     //보조 Bean 메소드
+    @Bean
+    public OAuth2SuccessHandler oAuth2SuccessHandler() {
+        return new OAuth2SuccessHandler(tokenProvider,
+                refreshTokenRepository,
+                oAuth2AuthorizationRequestBasedOnCookieRepository(),
+                userService
+        );
+    }
 
     //토큰기반 인증 필터
     @Bean
@@ -112,7 +126,7 @@ public class WebOAuthSecurityConfig {
 
     //OAuth2 인증 요청 쿠키에 저장 및 관리
     @Bean
-    public AuthorizationRequestRepository<OAuth2AuthorizationRequest> oAuth2AuthorizationRequestBasedOnCookieRepository() {
+    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
         return new OAuth2AuthorizationRequestBasedOnCookieRepository();
     }
 
@@ -122,6 +136,24 @@ public class WebOAuthSecurityConfig {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
+
+
+
+    //oauth security 와 관련 없음!
+    // restapi 호출위해 작성
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
+    public ProviderOAuth2UserGoogle providerOAuth2UserGoogle() {
+        return new ProviderOAuth2UserGoogle();
+    }
+
+
 }
 
 
