@@ -1,8 +1,9 @@
 package com.emotionmaster.emolog.diary.dto.response;
 
-import com.emotionmaster.emolog.color.dto.response.ColorAndDate;
-import com.emotionmaster.emolog.util.DateUtil;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -12,13 +13,15 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class SummaryDiaryResponse {
-    private Diary diary;
+    protected Diary diary;
 
-    private Color color;
+    protected Color color;
 
-    private List<String> emotion;
+    protected List<String> emotion;
 
-    private String comment;
+    protected String comment;
+
+    //todo 사진 추가
 
     public void toSummary(com.emotionmaster.emolog.diary.domain.Diary diary){
         this.diary = Diary.builder()
@@ -26,13 +29,19 @@ public class SummaryDiaryResponse {
                 .content(diary.getContent())
                 .dayOfWeek(diary.getDayOfWeek())
                 .build();
-        this.color = new Color(diary.getColor().getHexa());
+        this.color = Color.builder()
+                .hexa(diary.getColor().getHexa())
+                .red(diary.getColor().getRed())
+                .green(diary.getColor().getGreen())
+                .blue(diary.getColor().getBlue())
+                .build();
         this.emotion = List.of(diary.getEmotion().getEmotion().split(",")); //todo 대표 감정?
         this.comment = diary.getComment().getComment();
     }
 }
 
-record Color (String hexa){}
+@Builder
+record Color (String hexa, int red, int green, int blue){}
 
 @Builder
 record Diary (LocalDate date, DayOfWeek dayOfWeek, String content){}

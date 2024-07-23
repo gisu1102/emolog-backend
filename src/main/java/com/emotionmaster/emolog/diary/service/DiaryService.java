@@ -4,6 +4,7 @@ import com.emotionmaster.emolog.color.service.ColorService;
 import com.emotionmaster.emolog.comment.service.CommentService;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
+import com.emotionmaster.emolog.diary.dto.response.GetDiaryResponse;
 import com.emotionmaster.emolog.diary.dto.response.SummaryDiaryResponse;
 import com.emotionmaster.emolog.diary.repository.DiaryRepository;
 import com.emotionmaster.emolog.emotion.domain.Emotion;
@@ -50,6 +51,16 @@ public class DiaryService {
         Optional<Diary> diary = diaryRepository.findById(id);
         if (diary.isPresent()){
             SummaryDiaryResponse response = new SummaryDiaryResponse();
+            response.toSummary(diary.get());
+            return response;
+        }
+        return null;
+    }
+
+    public GetDiaryResponse getDiary(long id){
+        Optional<Diary> diary = diaryRepository.findById(id);
+        if (diary.isPresent()){
+            GetDiaryResponse response = new GetDiaryResponse();
             response.toSummary(diary.get());
             return response;
         }
