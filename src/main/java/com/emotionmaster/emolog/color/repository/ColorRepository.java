@@ -12,10 +12,11 @@ import java.util.List;
 @Repository
 public interface ColorRepository extends JpaRepository<Color, Long> {
 
-    @Query("SELECT new com.emotionmaster.emolog.color.dto.response.ColorAndDate(c.diary.date, c.hexa, c.diary.dayOfWeek) FROM Color c WHERE MONTH(c.diary.date) = :month")
-    List<ColorAndDate> findColorAndDateByMonth(int month);
+    @Query("SELECT new com.emotionmaster.emolog.color.dto.response.ColorAndDate(c.diary.date, c.hexa, c.diary.dayOfWeek) FROM Color c " +
+            "WHERE MONTH(c.diary.date) = :month AND c.diary.user.id = :id")
+    List<ColorAndDate> findColorAndDateByMonthAndUserId(@Param("month") int month, @Param("id") long id);
 
     @Query(value = "SELECT new com.emotionmaster.emolog.color.dto.response.ColorAndDate(c.diary.date, c.hexa, c.diary.dayOfWeek) FROM Color c " +
-            "WHERE MONTH(c.diary.date) = :month AND c.diary.week = :week")
-    List<ColorAndDate> findAllByMonthAndWeek(@Param("month") int month, @Param("week") int week);
+            "WHERE MONTH(c.diary.date) = :month AND c.diary.week = :week AND c.diary.user.id = :id")
+    List<ColorAndDate> findAllByMonthAndWeekAndUserId(@Param("month") int month, @Param("week") int week, @Param("id") long id);
 }

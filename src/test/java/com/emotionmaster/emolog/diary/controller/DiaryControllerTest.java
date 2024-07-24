@@ -4,6 +4,7 @@ import com.emotionmaster.emolog.color.domain.Color;
 import com.emotionmaster.emolog.color.repository.ColorRepository;
 import com.emotionmaster.emolog.comment.domain.Comment;
 import com.emotionmaster.emolog.comment.repository.CommentRepository;
+import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
 import com.emotionmaster.emolog.diary.dto.request.Qa;
@@ -13,7 +14,8 @@ import com.emotionmaster.emolog.emotion.domain.EmotionType;
 import com.emotionmaster.emolog.emotion.repository.EmotionRepository;
 import com.emotionmaster.emolog.q_a.domain.Q_A;
 import com.emotionmaster.emolog.q_a.repository.QaRepository;
-import com.emotionmaster.emolog.util.DateUtil;
+import com.emotionmaster.emolog.user.domain.User;
+import com.emotionmaster.emolog.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,11 +24,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -63,6 +69,14 @@ class DiaryControllerTest {
     @Autowired
     CommentRepository commentRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    TokenProvider tokenProvider;
+
+    User user;
+
     @BeforeEach
     public void setMockMvc(){
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
@@ -70,9 +84,25 @@ class DiaryControllerTest {
 //        diaryRepository.deleteAll();
     }
 
+
+    @BeforeEach
+    public void setUp() {
+        userRepository.deleteAll();
+        user = userRepository.save(User.builder()
+                .email("user@gmail.com")
+                .password("test")
+                .nickname("nickname")
+                .age(25)
+                .oauthType("google")
+                .build());
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()));
+    }
+
     @DisplayName("saveDiary() : 전달받은 일기와 Q&A, 감정까지 모두 저장한다.")
     @Test
-    @BeforeEach
+//    @BeforeEach
     public void saveDiary() throws Exception{
         //given
         final String url ="/api/diary";
@@ -85,9 +115,10 @@ class DiaryControllerTest {
                 new AddDiaryRequest(now, content, new Qa(question, answer), emotion);
 
         final String requestBody = objectMapper.writeValueAsString(request);
-
+        String token = tokenProvider.generateToken(user, Duration.ofHours(4));
         //when
         ResultActions result = mockMvc.perform(post(url)
+                        .header("Authorization", "Bearer "+token )
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody));
 
@@ -122,6 +153,7 @@ class DiaryControllerTest {
         assertThat(comment.getType()).isEqualTo(EmotionType.POS_UNACT);
         assertThat(comment.getComment()).isEqualTo(commentRepository.findById(comment.getId()).get().getComment());
 
+        assertThat(diary.get(0).getUser()).isNotNull();
     }
 
     @DisplayName("deleteDiary() : id 값에 맞춰 일기를 삭제한다")
@@ -129,7 +161,10 @@ class DiaryControllerTest {
     public void deleteDiary() throws Exception {
         final String url = "/api/diary/{id}";
         Diary diary = diaryRepository.save(
-                new Diary(LocalDate.now(), "content", DateUtil.getWeekOfMonthByDate(LocalDate.now()), LocalDate.now().getDayOfWeek()));
+                Diary.builder()
+                        .date(LocalDate.now())
+                        .content("content")
+                        .build());
 
         ResultActions results = mockMvc.perform(delete(url,diary.getId()));
 
