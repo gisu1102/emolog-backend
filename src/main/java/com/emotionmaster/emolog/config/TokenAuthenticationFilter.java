@@ -52,6 +52,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         return null;
     }
+
+    public String getAccessToken(HttpServletRequest request){
+        String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
+        return getAccessToken(authorizationHeader);
+    }
 }
 
 
