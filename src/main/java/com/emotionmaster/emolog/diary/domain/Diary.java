@@ -5,6 +5,7 @@ import com.emotionmaster.emolog.comment.domain.Comment;
 import com.emotionmaster.emolog.emotion.domain.Emotion;
 import com.emotionmaster.emolog.config.BaseEntity;
 import com.emotionmaster.emolog.q_a.domain.Q_A;
+import com.emotionmaster.emolog.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,12 +29,16 @@ public class Diary extends BaseEntity {
     private String content;
 
     //몇 주인가?
-    @Column(name="date_week", nullable = false)
+    @Column(name="date_week")
     private Integer week;
 
     //몇 요일인가?
-    @Column(name="day_of_week", nullable = false)
+    @Column(name="day_of_week")
     private DayOfWeek dayOfWeek;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     //mappedBy는 누가 이 객체를 관리할 것인지 정의 하는 것으로 !정의 되지 않은 객체가 주인이 된다!
     // 여기서는 모두 diary 객체가 주인이 아니다!!! Diary 객체에서는 조회만 가능, 수정 불가
@@ -56,11 +61,12 @@ public class Diary extends BaseEntity {
     private Color color;
 
     @Builder
-    public Diary(LocalDate date, String content, Integer week, DayOfWeek dayOfWeek) {
+    public Diary(LocalDate date, String content, Integer week, DayOfWeek dayOfWeek, User user) {
         this.date = date;
         this.content = content;
         this.week = week;
         this.dayOfWeek = dayOfWeek;
+        this.user = user;
     }
 
     public void toComment(Comment comment){

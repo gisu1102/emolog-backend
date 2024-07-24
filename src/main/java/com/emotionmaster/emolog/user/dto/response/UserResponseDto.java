@@ -1,6 +1,5 @@
 package com.emotionmaster.emolog.user.dto.response;
 
-import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.user.domain.User;
 import lombok.Getter;
 import lombok.Setter;
