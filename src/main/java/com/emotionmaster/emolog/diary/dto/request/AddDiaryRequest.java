@@ -3,6 +3,7 @@ package com.emotionmaster.emolog.diary.dto.request;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.emotion.domain.Emotion;
 import com.emotionmaster.emolog.q_a.domain.Q_A;
+import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,12 +20,13 @@ public class AddDiaryRequest {
     private Qa q_a;
     private String emotion;
 
-    public Diary toDiaryEntity(){
+    public Diary toDiaryEntity(User user){
         return Diary.builder()
                 .date(date)
                 .content(content)
                 .week(DateUtil.getWeekOfMonthByDate(date))
                 .dayOfWeek(date.getDayOfWeek())
+                .user(user)
                 .build();
     }
 
