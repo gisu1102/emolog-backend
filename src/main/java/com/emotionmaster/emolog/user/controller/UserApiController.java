@@ -3,6 +3,7 @@ package com.emotionmaster.emolog.user.controller;
 
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserGoogle;
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
+import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
 import com.emotionmaster.emolog.user.dto.response.UserInfoResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserResponseDto;
@@ -49,6 +50,15 @@ public class UserApiController {
         userService.delete(id);
         return ResponseEntity.noContent()
                 .build();
+    }
+
+
+    //이번 달 일기 개수 조회
+    @GetMapping("/api/userDiary/{id}")
+    public long countUserDiarybyMonth(@PathVariable Long id) {
+        User user = userService.findById(id);
+
+        return userService.getDiaryCountForUserThisMonth(id);
     }
 
 

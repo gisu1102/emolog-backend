@@ -1,6 +1,5 @@
 package com.emotionmaster.emolog.user.domain;
 
-import com.emotionmaster.emolog.diary.domain.Diary;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -47,8 +46,6 @@ public class User implements UserDetails {
     @Column(name = "age" )
     private int age;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Diary> diary;
 
     // 유저 - 이메일, 비밀번호, 이름, 타입, 닉네임, 나이, 직업
     @Builder(toBuilder = true)
