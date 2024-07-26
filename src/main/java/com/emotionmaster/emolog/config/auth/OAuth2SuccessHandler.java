@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -117,8 +116,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         if (attributes.containsKey("sub")) {
             return "google";
-        } else if (attributes.containsKey("id") && attributes.containsKey("kakao_account")) {
-            return "kakao";
+//        } else if (attributes.containsKey("id") && attributes.containsKey("kakao_account")) {
+//            return "kakao";
         } else if (attributes.containsKey("resultcode")) {
             return "naver";
         } else {

@@ -1,14 +1,10 @@
 package com.emotionmaster.emolog.user.controller;
 
 
-import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserGoogle;
-import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
-import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
 import com.emotionmaster.emolog.user.dto.response.UserDiaryCountStatusResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserInfoResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserResponseDto;
-import com.emotionmaster.emolog.user.service.TokenService;
 import com.emotionmaster.emolog.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

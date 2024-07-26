@@ -50,7 +50,7 @@ public class WebOAuthSecurityConfig {
     @Bean
     public WebSecurityCustomizer configure() {
         return (web) -> web.ignoring()
-                .requestMatchers(toH2Console())
+//                .requestMatchers(toH2Console()) sql사용을 위해 주석처리
                 .requestMatchers("/img/**", "/css/**", "/js/**");
     }
 
@@ -174,11 +174,6 @@ public class WebOAuthSecurityConfig {
     @Bean
     public ProviderOAuth2UserGoogle providerOAuth2UserGoogle() {
         return new ProviderOAuth2UserGoogle();
-    }
-
-    @Bean
-    public ProviderOAuth2UserKakao ProviderOAuth2UserKakao() {
-        return new ProviderOAuth2UserKakao();
     }
 
     @Bean
