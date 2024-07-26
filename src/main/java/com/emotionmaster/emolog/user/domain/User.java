@@ -63,8 +63,7 @@ public class User extends BaseEntity implements UserDetails {
         this.age = age;
     }
 
-    @Builder(toBuilder = true)
-    public User(String nickname, int age) {
+    public void toUpdateUser(String nickname, int age) {
         this.nickname = nickname;
         this.age = age;
     }
