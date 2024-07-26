@@ -32,7 +32,7 @@ public class UserApiController {
                 .body(userService.login(request, response, attributes));
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(HttpServletResponse response , @RequestHeader("Authorization") String accessToken) {
         Map<String, String> result = userService.logout(response , accessToken);
         return ResponseEntity.ok()
