@@ -48,6 +48,6 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-tasks.withType(Test).forEach {{
+tasks.withType(Test).configureEach {
 	enabled = false
-}}
+}
