@@ -3,6 +3,7 @@ package com.emotionmaster.emolog.user.service;
 import com.emotionmaster.emolog.diary.repository.DiaryRepository;
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
+import com.emotionmaster.emolog.user.dto.response.UserDiaryCountStatusResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserInfoResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserResponseDto;
 import com.emotionmaster.emolog.user.repository.UserRepository;
@@ -122,5 +123,19 @@ public class UserService {
     public long getDiaryCountForUserThisMonth(Long userId) {
 
         return diaryRepository.countDiariesForUserThisMonth(userId);
+    }
+
+    // 특정 사용자가 작성한 일기에 달린 색 개수를 반환하는 메서드
+    public long getColorCountForUser(Long userid) {
+        return diaryRepository.countColorsByUserId(userid);
+    }
+
+    public UserDiaryCountStatusResponseDto getUserDiaryStats(Long userId) {
+        long diaryCount = getDiaryCountForUserThisMonth(userId);
+        long colorCount = getColorCountForUser(userId);
+        return UserDiaryCountStatusResponseDto.builder()
+                .diaryCount(diaryCount)
+                .colorCount(colorCount)
+                .build();
     }
 }

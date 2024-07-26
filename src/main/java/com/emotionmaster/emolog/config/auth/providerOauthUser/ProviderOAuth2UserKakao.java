@@ -1,15 +1,13 @@
 package com.emotionmaster.emolog.config.auth.providerOauthUser;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Getter
 @Component
@@ -17,27 +15,11 @@ import java.util.Map;
 public class ProviderOAuth2UserKakao implements ProviderOAuth2UserCustom {
     private Map<String, Object> attributes;
 
-    @Value("${kakao.id}")
-    private String kakaoId;
-    @Value("${kakao.redirectUrl}")
-    private String kakaoRedirectUrl;
-    @Value("${kakao.secret}")
-    private String kakaoClientSecret;
 
     // 새 생성자 추가
     public ProviderOAuth2UserKakao(Map<String, Object> attributes) {
 
         this.attributes = attributes;
-    }
-
-    public String responseUrl(){
-        String kakaoLoginUrl =
-                "https://kaouth.kakao.com/oauth2/authorize?client_id="
-                        + kakaoId + "&redirect_uri=" +
-                        kakaoRedirectUrl + "&response_type=code";
-        log.info("Generated Kakao Login URL: " + kakaoLoginUrl);
-
-        return kakaoLoginUrl;
     }
 
 

@@ -5,6 +5,7 @@ import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2User
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
+import com.emotionmaster.emolog.user.dto.response.UserDiaryCountStatusResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserInfoResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserResponseDto;
 import com.emotionmaster.emolog.user.service.TokenService;
@@ -31,6 +32,7 @@ public class UserApiController {
         Map<String, String> result = userService.logout(response, id , accessToken);
         return ResponseEntity.ok(result);
     }
+
     //회원 정보 무엇을 수정할지 정하기
     @PutMapping("/api/updateUser/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id , @RequestBody UserRequestDto request){
@@ -53,12 +55,12 @@ public class UserApiController {
     }
 
 
-    //이번 달 일기 개수 조회
-    @GetMapping("/api/userDiary/{id}")
-    public long countUserDiarybyMonth(@PathVariable Long id) {
-        User user = userService.findById(id);
-
-        return userService.getDiaryCountForUserThisMonth(id);
+    //이번 달 일기, 색 개수 조회
+    @GetMapping("/api/userDiaryColorCount/{id}")
+    public ResponseEntity<UserDiaryCountStatusResponseDto> countUserDiaryAndColorByMonth(@PathVariable Long id) {
+        UserDiaryCountStatusResponseDto response = userService.getUserDiaryStats(id);
+        log.info("일기 개수+ 색" + response);
+        return ResponseEntity.ok(response);
     }
 
 
