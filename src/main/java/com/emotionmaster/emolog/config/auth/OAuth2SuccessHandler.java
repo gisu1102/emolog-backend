@@ -77,6 +77,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         clearAuthenticationAttributes(request, response);
         //리다이렉트
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        log.info("Success Url : " + targetUrl);
     }
 
 

@@ -5,6 +5,8 @@ import com.emotionmaster.emolog.config.auth.OAuth2SuccessHandler;
 import com.emotionmaster.emolog.config.auth.OAuth2UserCustomService;
 import com.emotionmaster.emolog.config.auth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserGoogle;
+import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
+import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserNaver;
 import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.user.repository.RefreshTokenRepository;
 import com.emotionmaster.emolog.user.service.UserService;
@@ -73,7 +75,9 @@ public class WebOAuthSecurityConfig {
                 .requestMatchers("/api/token").permitAll()
                 .requestMatchers("/api/refresh-token").permitAll()
                 .requestMatchers("/login/oauth2/code/google").permitAll() // 추가
-                .requestMatchers("/api/**").authenticated()
+                //테스트 권한 임시 허락
+                .requestMatchers("/api/**").permitAll()
+//                .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
         );
 
@@ -151,6 +155,16 @@ public class WebOAuthSecurityConfig {
     @Bean
     public ProviderOAuth2UserGoogle providerOAuth2UserGoogle() {
         return new ProviderOAuth2UserGoogle();
+    }
+
+    @Bean
+    public ProviderOAuth2UserKakao ProviderOAuth2UserKakao() {
+        return new ProviderOAuth2UserKakao();
+    }
+
+    @Bean
+    public ProviderOAuth2UserNaver ProviderOAuth2UserNaver() {
+        return new ProviderOAuth2UserNaver();
     }
 
 
