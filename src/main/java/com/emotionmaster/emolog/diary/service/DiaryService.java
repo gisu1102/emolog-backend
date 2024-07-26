@@ -12,6 +12,8 @@ import com.emotionmaster.emolog.emotion.domain.EmotionType;
 import com.emotionmaster.emolog.emotion.repository.EmotionRepository;
 import com.emotionmaster.emolog.q_a.repository.QaRepository;
 import com.emotionmaster.emolog.user.domain.User;
+import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
+import com.emotionmaster.emolog.user.repository.UserRepository;
 import com.emotionmaster.emolog.user.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

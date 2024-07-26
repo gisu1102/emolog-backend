@@ -1,4 +1,4 @@
-package com.emotionmaster.emolog.config.auth.providerOauthUser;
+/*package com.emotionmaster.emolog.config.auth.providerOauthUser;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,3 +45,4 @@ public class ProviderOAuth2UserKakao implements ProviderOAuth2UserCustom {
     }
 }
 
+*/

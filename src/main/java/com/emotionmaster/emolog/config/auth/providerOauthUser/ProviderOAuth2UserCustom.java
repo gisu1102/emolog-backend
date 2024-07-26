@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface ProviderOAuth2UserCustom {
 
-//    String responseUrl();
     String getProviderId();
     String getProvider();
     String getEmail();
@@ -17,8 +16,8 @@ public interface ProviderOAuth2UserCustom {
         switch (providerId) {
             case "google":
                 return new ProviderOAuth2UserGoogle(oAuth2User.getAttributes());
-            case "kakao":
-                return new ProviderOAuth2UserKakao(oAuth2User.getAttributes());
+//            case "kakao":
+//                return new ProviderOAuth2UserKakao(oAuth2User.getAttributes());
             case "naver":
                 return new ProviderOAuth2UserNaver(oAuth2User.getAttributes());
             default:

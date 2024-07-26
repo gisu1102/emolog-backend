@@ -2,7 +2,6 @@ package com.emotionmaster.emolog.config.auth;
 
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserCustom;
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserGoogle;
-import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserNaver;
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.repository.UserRepository;
@@ -13,7 +12,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 //OAuth 에서 제공하는 정보 기반으로 유저 객체 관리해주는 메소드 loadUser 활용
@@ -38,8 +36,8 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         if ("google".equals(providedId)) {
             log.info("LoadGoogleUserInfo");
             oAuth2UserInfo = new ProviderOAuth2UserGoogle(oAuth2User.getAttributes());
-        } else if ("kakao".equals(providedId)) {
-            oAuth2UserInfo = new ProviderOAuth2UserKakao(oAuth2User.getAttributes());
+//        } else if ("kakao".equals(providedId)) {
+//            oAuth2UserInfo = new ProviderOAuth2UserKakao(oAuth2User.getAttributes());
         } else if ("naver".equals(providedId)) {
             oAuth2UserInfo = new ProviderOAuth2UserNaver(oAuth2User.getAttributes());
         }
@@ -53,12 +51,10 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 
 
     //각 플랫폼 별 추출한 정보 db저장
-    private User saveOrUpdate(ProviderOAuth2UserCustom providerOAuth2UserCusotom) {
-        String providerId = providerOAuth2UserCusotom.getProviderId();
-
-        String provider = providerOAuth2UserCusotom.getProvider();
-        String email = providerOAuth2UserCusotom.getEmail();
-        String name = providerOAuth2UserCusotom.getName();
+    private void saveOrUpdate(ProviderOAuth2UserCustom providerOAuth2UserCustom) {
+        String provider = providerOAuth2UserCustom.getProvider();
+        String email = providerOAuth2UserCustom.getEmail();
+        String name = providerOAuth2UserCustom.getName();
 
         log.info("UserInfo" + provider + email + name);
         User user = userRepository.findByEmail(email)
@@ -68,7 +64,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
                         .name(name)
                         .oauthType(provider)
                         .build());
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
 

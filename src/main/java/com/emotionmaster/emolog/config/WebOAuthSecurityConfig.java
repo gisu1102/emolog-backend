@@ -26,6 +26,10 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Collections;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
@@ -46,7 +50,7 @@ public class WebOAuthSecurityConfig {
     @Bean
     public WebSecurityCustomizer configure() {
         return (web) -> web.ignoring()
-                .requestMatchers(toH2Console())
+//                .requestMatchers(toH2Console()) sql사용을 위해 주석처리
                 .requestMatchers("/img/**", "/css/**", "/js/**");
     }
 
@@ -59,6 +63,9 @@ public class WebOAuthSecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable);
+
+        //cors 설정
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         //세션 비활성화 및 앱 상대 비지정
         http.sessionManagement(session -> session
@@ -111,6 +118,18 @@ public class WebOAuthSecurityConfig {
         return http.build();
     }
 
+    private CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            CorsConfiguration corsConfiguration = new CorsConfiguration();
+            corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
+            corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
+            corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+            corsConfiguration.setExposedHeaders(Collections.singletonList("*"));
+            corsConfiguration.setMaxAge(3600L);
+            return corsConfiguration;
+        };
+    }
+
 
     //보조 Bean 메소드
     @Bean
@@ -155,11 +174,6 @@ public class WebOAuthSecurityConfig {
     @Bean
     public ProviderOAuth2UserGoogle providerOAuth2UserGoogle() {
         return new ProviderOAuth2UserGoogle();
-    }
-
-    @Bean
-    public ProviderOAuth2UserKakao ProviderOAuth2UserKakao() {
-        return new ProviderOAuth2UserKakao();
     }
 
     @Bean
