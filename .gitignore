@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 
 build.gradle
-src/main/resources/application.yml
+src/main/resources/application-secret.yml
 ### STS ###
 .apt_generated
 .classpath
