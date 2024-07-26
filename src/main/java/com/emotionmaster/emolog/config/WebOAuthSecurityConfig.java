@@ -1,9 +1,9 @@
 package com.emotionmaster.emolog.config;
 
 
+import com.emotionmaster.emolog.config.auth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.emotionmaster.emolog.config.auth.OAuth2SuccessHandler;
 import com.emotionmaster.emolog.config.auth.OAuth2UserCustomService;
-import com.emotionmaster.emolog.config.auth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserGoogle;
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserNaver;
@@ -19,8 +19,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
