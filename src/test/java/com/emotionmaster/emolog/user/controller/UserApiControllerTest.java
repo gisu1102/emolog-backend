@@ -1,7 +1,7 @@
 package com.emotionmaster.emolog.user.controller;
 
 import com.emotionmaster.emolog.user.domain.User;
-import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
+import com.emotionmaster.emolog.user.dto.request.UserUpdateRequestDto;
 import com.emotionmaster.emolog.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
@@ -65,12 +65,10 @@ class UserApiControllerTest {
         // given
         final String url = "/api/updateUser/{id}";
         final Long userId = user.getId();
-        final String newEmail = "newemail@gmail.com";
         final String newNickname = "newnickname";
         final int newAge = 30;
 
-        UserRequestDto requestDto = new UserRequestDto();
-        requestDto.setEmail(newEmail);
+        UserUpdateRequestDto requestDto = new UserUpdateRequestDto();
         requestDto.setNickname(newNickname);
         requestDto.setAge(newAge);
 
