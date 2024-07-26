@@ -1,5 +1,6 @@
 package com.emotionmaster.emolog.user.domain;
 
+import com.emotionmaster.emolog.config.BaseEntity;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,14 +21,14 @@ import java.util.List;
 @Getter
 @Entity
 //Spring Security 사용하기위해 Userdetails 상속받기
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
     @Id
     //기본 키값 자동 생성 + 자동 증가
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     //필드 설정 이후 수정 불ㄱ가
     @Column(name = "id", updatable = false)
-    private long id;
+    private Long id;
 
     @Column(name = "email" , nullable= false, unique = true)
     private String email;
