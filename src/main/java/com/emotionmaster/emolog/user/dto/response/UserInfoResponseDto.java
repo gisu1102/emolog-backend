@@ -6,13 +6,17 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public  class UserInfoResponseDto {
+public class UserInfoResponseDto {
     private String email;
+    private String name;
+    private String oauthType;
     private String nickname;
     private int age;
 
     public UserInfoResponseDto(User user) {
         this.email = user.getEmail();
+        this.name = user.getName();
+        this.oauthType = user.getOauthType();
         this.nickname = user.getNickname();
         this.age = user.getAge();
     }

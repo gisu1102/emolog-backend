@@ -4,11 +4,9 @@ package com.emotionmaster.emolog.config;
 import com.emotionmaster.emolog.config.auth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.emotionmaster.emolog.config.auth.OAuth2SuccessHandler;
 import com.emotionmaster.emolog.config.auth.OAuth2UserCustomService;
-import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserGoogle;
-import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserNaver;
 import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.user.repository.RefreshTokenRepository;
-import com.emotionmaster.emolog.user.service.UserService;
+import com.emotionmaster.emolog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +20,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -37,7 +34,7 @@ public class WebOAuthSecurityConfig {
     private final OAuth2UserCustomService oAuth2UserCustomService;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
 
    //h2, img css js 에 대한 스프링 시큐리티 비활성화
@@ -132,7 +129,7 @@ public class WebOAuthSecurityConfig {
         return new OAuth2SuccessHandler(tokenProvider,
                 refreshTokenRepository,
                 oAuth2AuthorizationRequestBasedOnCookieRepository(),
-                userService
+                userRepository
         );
     }
 
@@ -154,28 +151,6 @@ public class WebOAuthSecurityConfig {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
-
-
-
-    //oauth security 와 관련 없음!
-    // restapi 호출위해 작성
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
-    @Bean
-    public ProviderOAuth2UserGoogle providerOAuth2UserGoogle() {
-        return new ProviderOAuth2UserGoogle();
-    }
-
-    @Bean
-    public ProviderOAuth2UserNaver ProviderOAuth2UserNaver() {
-        return new ProviderOAuth2UserNaver();
-    }
-
 
 }
 

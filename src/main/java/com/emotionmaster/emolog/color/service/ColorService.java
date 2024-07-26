@@ -8,7 +8,7 @@ import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.emotion.domain.EmotionType;
 import com.emotionmaster.emolog.emotion.repository.DefaultEmotionRepository;
 import com.emotionmaster.emolog.user.domain.User;
-import com.emotionmaster.emolog.user.service.TokenService;
+import com.emotionmaster.emolog.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +20,15 @@ public class ColorService {
 
     private final ColorRepository colorRepository;
     private final DefaultEmotionRepository defaultEmotionRepository;
-    private final TokenService tokenService;
+    private final UserService userService;
 
     public List<ColorAndDate> findAllColorOfMonth(int month){
-        User user = tokenService.getUser();
+        User user = userService.getCurrentUser();
         return colorRepository.findColorAndDateByMonthAndUserId(month, user.getId());
     }
 
     public List<ColorAndDate> findAllColorOfWeek(int month, int week) {
-        User user = tokenService.getUser();
+        User user = userService.getCurrentUser();
         return colorRepository.findAllByMonthAndWeekAndUserId(month, week, user.getId());
     }
 

@@ -18,10 +18,6 @@ public class TokenService {
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenService refreshTokenService;
-    private final UserService userService;
-
-    private final TokenAuthenticationFilter tokenAuthenticationFilter;
-    private final HttpServletRequest request;
     private final UserRepository userRepository;
 
     public String createNewAccessToken(String refreshToken) {
@@ -31,15 +27,11 @@ public class TokenService {
         }
 
         Long userId = refreshTokenService.findByRefreshToken(refreshToken).getUserId();
-        User user = userService.findById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Unexpected User"));
 
         return tokenProvider.generateToken(user, Duration.ofHours(2));
     }
 
-    public User getUser(){
-        String token = tokenAuthenticationFilter.getAccessToken(request);
-        long userId = tokenProvider.getUserId(token);
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Unexpected User"));
-    }
+
 }
