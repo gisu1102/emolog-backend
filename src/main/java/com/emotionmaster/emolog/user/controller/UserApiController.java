@@ -1,11 +1,13 @@
 package com.emotionmaster.emolog.user.controller;
 
 
-import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
-import com.emotionmaster.emolog.user.dto.response.UserDiaryCountStatusResponseDto;
+import com.emotionmaster.emolog.user.dto.request.UserUpdateRequestDto;
+import com.emotionmaster.emolog.user.dto.response.KakaoResponseDto;
+import com.emotionmaster.emolog.user.dto.response.MyPageResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserInfoResponseDto;
-import com.emotionmaster.emolog.user.dto.response.UserResponseDto;
+import com.emotionmaster.emolog.user.dto.response.UserUpdateResponseDto;
 import com.emotionmaster.emolog.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,44 +21,67 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api")
 public class UserApiController {
 
     private final UserService userService;
 
-    @PostMapping("/logout/{id}")
-    public ResponseEntity<Map<String, String>> logout(HttpServletResponse response , @PathVariable Long id , @RequestHeader("Authorization") String accessToken) {
-        Map<String, String> result = userService.logout(response, id , accessToken);
-        return ResponseEntity.ok(result);
+    @PostMapping("/kakao/login")
+    public ResponseEntity<KakaoResponseDto> kakaoLogin(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> attributes){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userService.login(request, response, attributes));
     }
 
-    //회원 정보 무엇을 수정할지 정하기
-    @PutMapping("/api/updateUser/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id , @RequestBody UserRequestDto request){
-        UserResponseDto updatedUser = userService.update(id,request);
-        return ResponseEntity.ok(updatedUser);
+    @GetMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout(HttpServletResponse response , @RequestHeader("Authorization") String accessToken) {
+        Map<String, String> result = userService.logout(response , accessToken);
+        return ResponseEntity.ok()
+                .body(result);
     }
 
-    @GetMapping("/api/userInfo/{id}")
-    public ResponseEntity<UserInfoResponseDto> userInfo(@PathVariable Long id){
-        UserInfoResponseDto infoUser = userService.info(id);
-        return ResponseEntity.status(HttpStatus.OK)
+    /*
+    1. 로그인 후 age, nickname 값을 추가로 입력받아 업데이트
+    2. 회원 정보 수정
+    - Header로 들어오는 token 값으로 회원 조회
+     */
+    @PutMapping("/user")
+    public ResponseEntity<UserUpdateResponseDto> updateUser(@RequestBody UserUpdateRequestDto request){
+        UserUpdateResponseDto updatedUser = userService.update(request);
+        return ResponseEntity.ok()
+                .body(updatedUser);
+    }
+
+    /*
+    회원 정보 조회
+    - Header로 들어오는 token 값으로 회원 조회
+     */
+    @GetMapping("/user")
+    public ResponseEntity<UserInfoResponseDto> userInfo(){
+        UserInfoResponseDto infoUser = userService.info();
+        return ResponseEntity.ok()
                 .body(infoUser);
     }
 
-    @DeleteMapping("/api/userDelete/{id}")
-    public ResponseEntity<Void> userDelete(@PathVariable Long id){
-        userService.delete(id);
+    @DeleteMapping("/user")
+    public ResponseEntity<Void> userDelete(){
+        userService.delete();
         return ResponseEntity.noContent()
                 .build();
     }
 
 
-    //이번 달 일기, 색 개수 조회
-    @GetMapping("/api/userDiaryColorCount/{id}")
-    public ResponseEntity<UserDiaryCountStatusResponseDto> countUserDiaryAndColorByMonth(@PathVariable Long id) {
-        UserDiaryCountStatusResponseDto response = userService.getUserDiaryStats(id);
+    /*
+    마이페이지 화면
+    - 닉네임
+    - 이번달(Month) 작성한 일기 개수
+    - 총 색깔 개수
+     */
+    @GetMapping("/mypage")
+    public ResponseEntity<MyPageResponseDto> getMyPageInfo() {
+        MyPageResponseDto response = userService.getMyPageInfo();
         log.info("일기 개수+ 색" + response);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok()
+                .body(response);
     }
 
 

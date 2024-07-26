@@ -12,9 +12,7 @@ import com.emotionmaster.emolog.emotion.domain.EmotionType;
 import com.emotionmaster.emolog.emotion.repository.EmotionRepository;
 import com.emotionmaster.emolog.q_a.repository.QaRepository;
 import com.emotionmaster.emolog.user.domain.User;
-import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
-import com.emotionmaster.emolog.user.repository.UserRepository;
-import com.emotionmaster.emolog.user.service.TokenService;
+import com.emotionmaster.emolog.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,11 +29,11 @@ public class DiaryService {
 
     private final ColorService colorService;
     private final CommentService commentService;
-    private final TokenService tokenService;
+    private final UserService userService;
 
     @Transactional
     public Diary save(AddDiaryRequest request){
-        User user = tokenService.getUser();
+        User user = userService.getCurrentUser();
         Diary diary = diaryRepository.save(request.toDiaryEntity(user));
         qaRepository.save(request.toQ_AEntity(diary)); //Q_A 저장
         EmotionType emotionType = colorService.save(request.getEmotion(), diary);
