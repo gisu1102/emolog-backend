@@ -1,21 +1,29 @@
 package com.emotionmaster.emolog.user.service;
 
+import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
+import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.diary.repository.DiaryRepository;
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
+import com.emotionmaster.emolog.user.dto.response.KakaoResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserDiaryCountStatusResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserInfoResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserResponseDto;
+import com.emotionmaster.emolog.user.repository.RefreshTokenRepository;
 import com.emotionmaster.emolog.user.repository.UserRepository;
+import com.emotionmaster.emolog.util.UserUtil;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.emotionmaster.emolog.config.auth.OAuth2SuccessHandler.ACCESS_TOKEN_DURATION;
+import static com.emotionmaster.emolog.config.auth.OAuth2SuccessHandler.REFRESH_TOKEN_DURATION;
 
 
 @RequiredArgsConstructor
@@ -24,20 +32,15 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final DiaryRepository diaryRepository;
+    private final TokenProvider tokenProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
+
     //restTemplate 주입
     RestTemplate restTemplate = new RestTemplate();
 
     //구글 로그아웃 url
     String googleLogoutUrl = "https://accounts.google.com/Logout";
     String kakaoLogoutUrl ="https://kapi.kakao.com/v1/user/logout";
-    public Long save(UserRequestDto dto) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-        return userRepository.save(User.builder()
-                .email(dto.getEmail())
-                .password(encoder.encode(dto.getPassword()))
-                .build()).getId();
-    }
 
 
     public Map<String, String> logout(HttpServletResponse response, Long id ,String accessToken ) {
@@ -137,5 +140,30 @@ public class UserService {
                 .diaryCount(diaryCount)
                 .colorCount(colorCount)
                 .build();
+    }
+
+    /*
+    카카오 로그인 정보 로그인
+    -> AccessToken, RefreshToken 발급
+    Access : Response
+    Refresh : Cookie 저장
+     */
+    public KakaoResponseDto login(HttpServletRequest request, HttpServletResponse response, Map<String, Object> attributes) {
+        ProviderOAuth2UserKakao kakaoUser = new ProviderOAuth2UserKakao(attributes);
+        User savedUser = userRepository.save(User.builder()
+                .email(kakaoUser.getEmail())
+                .name(kakaoUser.getName())
+                .oauthType(kakaoUser.getProvider())
+                .build());
+
+        return new KakaoResponseDto(savedUser, generateToken(request, response, savedUser));
+    }
+
+    public String generateToken(HttpServletRequest request, HttpServletResponse response, User user){
+        String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
+        UserUtil.saveRefreshToken(refreshTokenRepository, user.getId(), refreshToken);
+        UserUtil.addRefreshTokenToCookie(request, response, refreshToken);
+
+        return tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
     }
 }

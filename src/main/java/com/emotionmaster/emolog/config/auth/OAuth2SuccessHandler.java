@@ -2,11 +2,10 @@ package com.emotionmaster.emolog.config.auth;
 
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserCustom;
 import com.emotionmaster.emolog.config.jwt.TokenProvider;
-import com.emotionmaster.emolog.user.domain.RefreshToken;
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.repository.RefreshTokenRepository;
 import com.emotionmaster.emolog.user.service.UserService;
-import com.emotionmaster.emolog.util.CookieUtil;
+import com.emotionmaster.emolog.util.UserUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -65,8 +64,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //RefreshToken 생성 및 쿠키에 추가
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
-        saveRefreshToken(user.getId(), refreshToken);
-        addRefreshTokenToCookie(request, response, refreshToken);
+        UserUtil.saveRefreshToken(refreshTokenRepository, user.getId(), refreshToken);
+        UserUtil.addRefreshTokenToCookie(request, response, refreshToken);
 
         //AccessToken 생성
         String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
@@ -80,26 +79,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
 
-
-    //Refresh 토큰 저장
-    private void saveRefreshToken(Long userId, String newRefreshToken) {
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
-                .map(entity -> entity.update(newRefreshToken))
-                .orElse(new RefreshToken(userId, newRefreshToken));
-
-        refreshTokenRepository.save(refreshToken);
-    }
-
-    //RefreshToken 삭제후 새로운
-    private void addRefreshTokenToCookie(HttpServletRequest request, HttpServletResponse response, String refreshToken) {
-        int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
-
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
-        CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge);
-    }
-
     //RefreshToken 삭제
-    private void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
+    public void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
         authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
