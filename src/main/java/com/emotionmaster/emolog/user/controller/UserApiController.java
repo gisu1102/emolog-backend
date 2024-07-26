@@ -2,10 +2,12 @@ package com.emotionmaster.emolog.user.controller;
 
 
 import com.emotionmaster.emolog.user.dto.request.UserRequestDto;
+import com.emotionmaster.emolog.user.dto.response.KakaoResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserDiaryCountStatusResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserInfoResponseDto;
 import com.emotionmaster.emolog.user.dto.response.UserResponseDto;
 import com.emotionmaster.emolog.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,12 @@ import java.util.Map;
 public class UserApiController {
 
     private final UserService userService;
+
+    @PostMapping("/kakao/login")
+    public ResponseEntity<KakaoResponseDto> kakaoLogin(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> attributes){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userService.login(request, response, attributes));
+    }
 
     @PostMapping("/logout/{id}")
     public ResponseEntity<Map<String, String>> logout(HttpServletResponse response , @PathVariable Long id , @RequestHeader("Authorization") String accessToken) {
