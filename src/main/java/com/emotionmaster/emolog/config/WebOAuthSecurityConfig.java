@@ -5,7 +5,6 @@ import com.emotionmaster.emolog.config.auth.OAuth2AuthorizationRequestBasedOnCoo
 import com.emotionmaster.emolog.config.auth.OAuth2SuccessHandler;
 import com.emotionmaster.emolog.config.auth.OAuth2UserCustomService;
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserGoogle;
-import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserNaver;
 import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.user.repository.RefreshTokenRepository;
@@ -28,8 +27,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
-
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 @RequiredArgsConstructor
 //@bean 정의를 통해 의존성 주입 용이하도록
