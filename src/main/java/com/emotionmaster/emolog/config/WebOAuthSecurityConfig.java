@@ -75,7 +75,7 @@ public class WebOAuthSecurityConfig {
                 .requestMatchers("/api/refresh-token").permitAll()
                 .requestMatchers("/login/oauth2/code/google").permitAll() // 추가
                 //테스트 권한 임시 허락
-                .requestMatchers("/api/**").permitAll()
+                .requestMatchers("/**").permitAll()
 //                .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
         );
