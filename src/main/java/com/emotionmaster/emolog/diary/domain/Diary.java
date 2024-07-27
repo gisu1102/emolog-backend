@@ -4,6 +4,7 @@ import com.emotionmaster.emolog.color.domain.Color;
 import com.emotionmaster.emolog.comment.domain.Comment;
 import com.emotionmaster.emolog.emotion.domain.Emotion;
 import com.emotionmaster.emolog.config.BaseEntity;
+import com.emotionmaster.emolog.image.domain.Image;
 import com.emotionmaster.emolog.q_a.domain.Q_A;
 import com.emotionmaster.emolog.user.domain.User;
 import jakarta.persistence.*;
@@ -59,6 +60,9 @@ public class Diary extends BaseEntity {
 
     @OneToOne(mappedBy = "diary", cascade = CascadeType.REMOVE)
     private Color color;
+
+    @OneToOne(mappedBy = "diary" , cascade = CascadeType.REMOVE)
+    private Image image;
 
     @Builder
     public Diary(LocalDate date, String content, Integer week, DayOfWeek dayOfWeek, User user) {
