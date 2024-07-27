@@ -1,6 +1,8 @@
 package com.emotionmaster.emolog.config.auth;
 
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserCustom;
+import com.emotionmaster.emolog.config.error.errorcode.UserErrorcode;
+import com.emotionmaster.emolog.config.error.exception.UserException;
 import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.repository.RefreshTokenRepository;
@@ -60,7 +62,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("Retrieved email from OAuth2User: {}", email);
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Unexpected User"));
+                .orElseThrow(() -> new UserException(UserErrorcode.MEMBER_NOT_FOUND));
 
 
         //RefreshToken 생성 및 쿠키에 추가
@@ -103,7 +105,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         } else if (attributes.containsKey("resultcode")) {
             return "naver";
         } else {
-            throw new IllegalArgumentException("Unsupported provider");
+            throw new UserException(UserErrorcode.OAUTH_LOGIN_ERROR);
         }
     }
 }
