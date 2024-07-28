@@ -48,10 +48,6 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-jar {
-	enabled = false
-}
-
 tasks.withType(Test).configureEach {
 	enabled = false
 }
