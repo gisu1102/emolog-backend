@@ -1,5 +1,7 @@
 package com.emotionmaster.emolog.config.jwt;
 
+import com.emotionmaster.emolog.config.error.errorcode.UserErrorcode;
+import com.emotionmaster.emolog.config.error.exception.UserException;
 import com.emotionmaster.emolog.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
@@ -75,6 +77,7 @@ public class TokenProvider {
 
     public Long getUserId(String token) {
         Claims claims = getClaims(token);
+        if (claims.isEmpty()) throw new UserException(UserErrorcode.ILLEGAL_ARGUMENT_EXCEPTION);
         return claims.get("id", Long.class);
     }
 

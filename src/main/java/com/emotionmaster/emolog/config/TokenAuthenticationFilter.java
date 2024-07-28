@@ -1,5 +1,7 @@
 package com.emotionmaster.emolog.config;
 
+import com.emotionmaster.emolog.config.error.errorcode.UserErrorcode;
+import com.emotionmaster.emolog.config.error.exception.UserException;
 import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -55,6 +57,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     public String getAccessToken(HttpServletRequest request){
         String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
+        if (authorizationHeader == null) throw new UserException(UserErrorcode.TOKEN_NOT_FOUND);
         return getAccessToken(authorizationHeader);
     }
 }

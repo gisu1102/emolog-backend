@@ -1,6 +1,8 @@
 package com.emotionmaster.emolog.config.auth.providerOauthUser;
 
 
+import com.emotionmaster.emolog.config.error.errorcode.UserErrorcode;
+import com.emotionmaster.emolog.config.error.exception.UserException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +23,7 @@ public interface ProviderOAuth2UserCustom {
             case "naver":
                 return new ProviderOAuth2UserNaver(oAuth2User.getAttributes());
             default:
-                throw new IllegalArgumentException("Unsupported provider: " + providerId);
+                throw new UserException(UserErrorcode.OAUTH_LOGIN_ERROR);
         }
     }
 

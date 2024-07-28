@@ -2,6 +2,8 @@ package com.emotionmaster.emolog.user.service;
 
 import com.emotionmaster.emolog.config.TokenAuthenticationFilter;
 import com.emotionmaster.emolog.config.auth.providerOauthUser.ProviderOAuth2UserKakao;
+import com.emotionmaster.emolog.config.error.errorcode.UserErrorcode;
+import com.emotionmaster.emolog.config.error.exception.UserException;
 import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.diary.repository.DiaryRepository;
 import com.emotionmaster.emolog.user.domain.User;
@@ -51,7 +53,7 @@ public class UserService {
         String token = tokenAuthenticationFilter.getAccessToken(request);
         long userId = tokenProvider.getUserId(token);
         return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Unexpected User"));
+                .orElseThrow(() -> new UserException(UserErrorcode.MEMBER_NOT_FOUND));
     }
 
     /*
@@ -76,7 +78,7 @@ public class UserService {
                     // 네이버의 경우, 엔드포인트 호출 없이 쿠키만 삭제
                     break;
                 default:
-                    throw new IllegalArgumentException("Unsupported provider: " + user.getOauthType());
+                    throw new UserException(UserErrorcode.OAUTH_LOGIN_ERROR);
             }
         } catch (Exception e) {
             // 로그아웃 실패 처리 (예: 로그 기록)
@@ -151,6 +153,9 @@ public class UserService {
      */
     public KakaoResponseDto login(HttpServletRequest request, HttpServletResponse response, Map<String, Object> attributes) {
         ProviderOAuth2UserKakao kakaoUser = new ProviderOAuth2UserKakao(attributes);
+        if (userRepository.findByEmail(kakaoUser.getEmail()).isPresent())
+            throw new UserException(UserErrorcode.MEMBER_DUPLICATED);
+
         User savedUser = userRepository.save(User.builder()
                 .email(kakaoUser.getEmail())
                 .name(kakaoUser.getName())

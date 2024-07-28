@@ -2,6 +2,8 @@ package com.emotionmaster.emolog.diary.service;
 
 import com.emotionmaster.emolog.color.service.ColorService;
 import com.emotionmaster.emolog.comment.service.CommentService;
+import com.emotionmaster.emolog.config.error.errorcode.DiaryErrorCode;
+import com.emotionmaster.emolog.config.error.exception.DiaryException;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
 import com.emotionmaster.emolog.diary.dto.response.GetDiaryResponse;
@@ -33,7 +35,10 @@ public class DiaryService {
 
     @Transactional
     public Diary save(AddDiaryRequest request){
+        if (diaryRepository.findByDate(request.getDate()).isPresent())
+            throw new DiaryException(DiaryErrorCode.DIARY_DUPLICATED);
         User user = userService.getCurrentUser();
+
         Diary diary = diaryRepository.save(request.toDiaryEntity(user));
         qaRepository.save(request.toQ_AEntity(diary)); //Q_A 저장
         EmotionType emotionType = colorService.save(request.getEmotion(), diary);
@@ -47,26 +52,31 @@ public class DiaryService {
     }
 
     public void delete(long id){
+        isAuthorized(id);
         diaryRepository.deleteById(id);
     }
 
     public SummaryDiaryResponse getSummary(long id) {
-        Optional<Diary> diary = diaryRepository.findById(id);
-        if (diary.isPresent()){
-            SummaryDiaryResponse response = new SummaryDiaryResponse();
-            response.toSummary(diary.get());
-            return response;
-        }
-        return null;
+        Diary diary = isAuthorized(id);
+        SummaryDiaryResponse response = new SummaryDiaryResponse();
+        response.toSummary(diary);
+        return response;
     }
 
     public GetDiaryResponse getDiary(long id){
-        Optional<Diary> diary = diaryRepository.findById(id);
-        if (diary.isPresent()){
-            GetDiaryResponse response = new GetDiaryResponse();
-            response.toSummary(diary.get());
-            return response;
+        Diary diary = isAuthorized(id);
+        GetDiaryResponse response = new GetDiaryResponse();
+        response.toSummary(diary);
+        return response;
+    }
+
+    private Diary isAuthorized(long id){
+        Diary diary = diaryRepository.findById(id)
+                .orElseThrow(() -> new DiaryException(DiaryErrorCode.DIARY_NOT_FOUND));
+        if (diary.getUser().equals(userService.getCurrentUser())){
+            return diary;
+        } else {
+            throw new DiaryException(DiaryErrorCode.DIARY_UNAUTHORIZED);
         }
-        return null;
     }
 }

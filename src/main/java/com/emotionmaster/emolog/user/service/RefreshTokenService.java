@@ -1,6 +1,8 @@
 package com.emotionmaster.emolog.user.service;
 
 
+import com.emotionmaster.emolog.config.error.errorcode.UserErrorcode;
+import com.emotionmaster.emolog.config.error.exception.UserException;
 import com.emotionmaster.emolog.config.jwt.TokenProvider;
 import com.emotionmaster.emolog.user.domain.RefreshToken;
 import com.emotionmaster.emolog.user.repository.RefreshTokenRepository;
@@ -16,7 +18,7 @@ public class RefreshTokenService {
     private final TokenProvider tokenProvider;
     public RefreshToken findByRefreshToken(String refreshToken){
         return refreshTokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(()-> new IllegalArgumentException("Unexpected token"));
+                .orElseThrow(()-> new UserException(UserErrorcode.REFRESH_TOKEN_ERROR));
     }
 
 
