@@ -21,5 +21,5 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     @Query(value = "SELECT COUNT(*) FROM color INNER JOIN diary ON color.diary_id = diary.id WHERE diary.user_id = :userId", nativeQuery = true)
     long getTheNumberOfColors(@Param("userId") Long userId);
 
-    Optional<Diary> findByDate(LocalDate date);
+    Optional<Diary> findByDateAndUserId(LocalDate date, long userId);
 }

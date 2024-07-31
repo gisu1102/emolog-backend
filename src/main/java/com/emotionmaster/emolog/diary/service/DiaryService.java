@@ -36,9 +36,9 @@ public class DiaryService {
 
     @Transactional
     public Diary save(AddDiaryRequest request){
-        if (diaryRepository.findByDate(request.getDate()).isPresent())
-            throw new DiaryException(DiaryErrorCode.DIARY_DUPLICATED);
         User user = userService.getCurrentUser();
+        if (diaryRepository.findByDateAndUserId(request.getDate(), user.getId()).isPresent())
+            throw new DiaryException(DiaryErrorCode.DIARY_DUPLICATED);
 
         Diary diary = diaryRepository.save(request.toDiaryEntity(user));
         qaRepository.save(request.toQ_AEntity(diary)); //Q_A 저장
@@ -54,31 +54,32 @@ public class DiaryService {
 
     public void delete(long id){
         Optional<Diary> diary = diaryRepository.findById(id);
-        diary.ifPresent(this::isAuthorized);
+        if (diary.isPresent()) {
+            if (!diary.get().getUser().equals(userService.getCurrentUser()))
+                throw new DiaryException(DiaryErrorCode.DIARY_UNAUTHORIZED);
+        }
         diaryRepository.deleteById(id);
     }
 
     public SummaryDiaryResponse getSummary(String date) {
-        Diary diary = diaryRepository.findByDate(DateUtil.strToDate(date))
+        User user = userService.getCurrentUser();
+        Diary diary = diaryRepository.findByDateAndUserId(DateUtil.strToDate(date), user.getId())
                 .orElseThrow(() -> new DiaryException(DiaryErrorCode.DIARY_NOT_FOUND));
-        isAuthorized(diary);
+        if (!diary.getUser().equals(user))
+            throw new DiaryException(DiaryErrorCode.DIARY_UNAUTHORIZED);
         SummaryDiaryResponse response = new SummaryDiaryResponse();
         response.toSummary(diary);
         return response;
     }
 
     public GetDiaryResponse getDiary(String date){
-        Diary diary = diaryRepository.findByDate(DateUtil.strToDate(date))
+        User user = userService.getCurrentUser();
+        Diary diary = diaryRepository.findByDateAndUserId(DateUtil.strToDate(date), user.getId())
                 .orElseThrow(() -> new DiaryException(DiaryErrorCode.DIARY_NOT_FOUND));
-        isAuthorized(diary);
+        if (!diary.getUser().equals(user))
+            throw new DiaryException(DiaryErrorCode.DIARY_UNAUTHORIZED);
         GetDiaryResponse response = new GetDiaryResponse();
         response.toSummary(diary);
         return response;
-    }
-
-    private void isAuthorized(Diary diary){
-        if (!diary.getUser().equals(userService.getCurrentUser())){
-            throw new DiaryException(DiaryErrorCode.DIARY_UNAUTHORIZED);
-        }
     }
 }
