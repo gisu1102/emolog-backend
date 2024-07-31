@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.emotionmaster.emolog.config.auth.OAuth2SuccessHandler.ACCESS_TOKEN_DURATION;
 import static com.emotionmaster.emolog.config.auth.OAuth2SuccessHandler.REFRESH_TOKEN_DURATION;
@@ -153,16 +154,17 @@ public class UserService {
      */
     public KakaoResponseDto login(HttpServletRequest request, HttpServletResponse response, Map<String, Object> attributes) {
         ProviderOAuth2UserKakao kakaoUser = new ProviderOAuth2UserKakao(attributes);
-        if (userRepository.findByEmail(kakaoUser.getEmail()).isPresent())
-            throw new UserException(UserErrorcode.MEMBER_DUPLICATED);
+        Optional<User> user = userRepository.findByEmail(kakaoUser.getEmail());
+        if (user.isEmpty()) {
+            User savedUser = userRepository.save(User.builder()
+                    .email(kakaoUser.getEmail())
+                    .name(kakaoUser.getName())
+                    .oauthType(kakaoUser.getProvider())
+                    .build());
+            return new KakaoResponseDto(savedUser, generateToken(request, response, savedUser));
+        }
+        return new KakaoResponseDto(user.get(), generateToken(request, response, user.get()));
 
-        User savedUser = userRepository.save(User.builder()
-                .email(kakaoUser.getEmail())
-                .name(kakaoUser.getName())
-                .oauthType(kakaoUser.getProvider())
-                .build());
-
-        return new KakaoResponseDto(savedUser, generateToken(request, response, savedUser));
     }
 
     public String generateToken(HttpServletRequest request, HttpServletResponse response, User user){
