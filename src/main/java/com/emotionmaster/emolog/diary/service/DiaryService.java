@@ -15,6 +15,7 @@ import com.emotionmaster.emolog.emotion.repository.EmotionRepository;
 import com.emotionmaster.emolog.q_a.repository.QaRepository;
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.service.UserService;
+import com.emotionmaster.emolog.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,9 +61,7 @@ public class DiaryService {
     }
 
     public SummaryDiaryResponse getSummary(String date) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate diaryDate = LocalDate.parse(date,dtf);
-        Diary diary = diaryRepository.findByDate(diaryDate)
+        Diary diary = diaryRepository.findByDate(DateUtil.strToDate(date))
                 .orElseThrow(() -> new DiaryException(DiaryErrorCode.DIARY_NOT_FOUND));
         isAuthorized(diary);
         SummaryDiaryResponse response = new SummaryDiaryResponse();
@@ -70,15 +69,13 @@ public class DiaryService {
         return response;
     }
 
-    public GetDiaryResponse getDiary(long id){
-        Optional<Diary> diary = diaryRepository.findById(id);
-        if (diary.isPresent()){
-            isAuthorized(diary.get());
-            GetDiaryResponse response = new GetDiaryResponse();
-            response.toSummary(diary.get());
-            return response;
-        }
-        return null;
+    public GetDiaryResponse getDiary(String date){
+        Diary diary = diaryRepository.findByDate(DateUtil.strToDate(date))
+                .orElseThrow(() -> new DiaryException(DiaryErrorCode.DIARY_NOT_FOUND));
+        isAuthorized(diary);
+        GetDiaryResponse response = new GetDiaryResponse();
+        response.toSummary(diary);
+        return response;
     }
 
     private void isAuthorized(Diary diary){
