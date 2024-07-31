@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Collections;
 
@@ -30,7 +31,7 @@ import java.util.Collections;
 @Configuration
 //OAuth2 + JWt 같이 사용하는 스프링 시큐리티설정 클래스! (기존 스프링시큐리티-세션,폼 => OAuth 쿠키,토큰
 //
-public class WebOAuthSecurityConfig {
+public class WebOAuthSecurityConfig implements WebMvcConfigurer {
     private final OAuth2UserCustomService oAuth2UserCustomService;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
