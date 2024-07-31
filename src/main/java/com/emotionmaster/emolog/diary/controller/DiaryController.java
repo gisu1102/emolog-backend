@@ -32,10 +32,10 @@ public class DiaryController {
                 .build();
     }
 
-    @GetMapping("/summary/{id}")
-    public ResponseEntity<SummaryDiaryResponse> getSummary(@PathVariable("id") long id){
+    @GetMapping("/summary/{date}")
+    public ResponseEntity<SummaryDiaryResponse> getSummary(@PathVariable("date") String date){
         return ResponseEntity.ok()
-                .body(diaryService.getSummary(id));
+                .body(diaryService.getSummary(date));
     }
 
     @GetMapping("/{id}")

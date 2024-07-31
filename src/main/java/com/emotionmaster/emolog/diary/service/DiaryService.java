@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -52,30 +54,35 @@ public class DiaryService {
     }
 
     public void delete(long id){
-        isAuthorized(id);
+        Optional<Diary> diary = diaryRepository.findById(id);
+        diary.ifPresent(this::isAuthorized);
         diaryRepository.deleteById(id);
     }
 
-    public SummaryDiaryResponse getSummary(long id) {
-        Diary diary = isAuthorized(id);
+    public SummaryDiaryResponse getSummary(String date) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate diaryDate = LocalDate.parse(date,dtf);
+        Diary diary = diaryRepository.findByDate(diaryDate)
+                .orElseThrow(() -> new DiaryException(DiaryErrorCode.DIARY_NOT_FOUND));
+        isAuthorized(diary);
         SummaryDiaryResponse response = new SummaryDiaryResponse();
         response.toSummary(diary);
         return response;
     }
 
     public GetDiaryResponse getDiary(long id){
-        Diary diary = isAuthorized(id);
-        GetDiaryResponse response = new GetDiaryResponse();
-        response.toSummary(diary);
-        return response;
+        Optional<Diary> diary = diaryRepository.findById(id);
+        if (diary.isPresent()){
+            isAuthorized(diary.get());
+            GetDiaryResponse response = new GetDiaryResponse();
+            response.toSummary(diary.get());
+            return response;
+        }
+        return null;
     }
 
-    private Diary isAuthorized(long id){
-        Diary diary = diaryRepository.findById(id)
-                .orElseThrow(() -> new DiaryException(DiaryErrorCode.DIARY_NOT_FOUND));
-        if (diary.getUser().equals(userService.getCurrentUser())){
-            return diary;
-        } else {
+    private void isAuthorized(Diary diary){
+        if (!diary.getUser().equals(userService.getCurrentUser())){
             throw new DiaryException(DiaryErrorCode.DIARY_UNAUTHORIZED);
         }
     }
