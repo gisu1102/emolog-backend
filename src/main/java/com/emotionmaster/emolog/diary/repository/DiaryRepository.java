@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
@@ -18,5 +21,5 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     @Query(value = "SELECT COUNT(*) FROM color INNER JOIN diary ON color.diary_id = diary.id WHERE diary.user_id = :userId", nativeQuery = true)
     long getTheNumberOfColors(@Param("userId") Long userId);
 
-
+    Optional<Diary> findByDateAndUserId(LocalDate date, long userId);
 }
