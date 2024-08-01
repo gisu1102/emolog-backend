@@ -17,9 +17,9 @@ public class ImageController {
     public String uploadImage(@RequestParam String imageUrl, Long diaryId) throws Exception {
         return imageService.saveImage(imageUrl, diaryId);
     }
-    @PostMapping("/api/image/getImageUrl")
-    public String getImageUrl(Long diaryId) {
-        return imageService.getImageUrl(diaryId);
+    @PostMapping("/api/image/getS3ImageUrl")
+    public String getS3ImageUrl(Long diaryId) {
+        return imageService.getS3ImageUrl(diaryId);
     }
 
 

@@ -34,17 +34,15 @@ public class ImageService {
 
 
     // 해당 일기와 연결된 이미지 가져오기
-    public String getImageUrl(Long diaryId) {
+    public String getS3ImageUrl(Long diaryId) {
         // 일기 ID로 이미지 조회
         Image image = imageRepository.findByDiaryId(diaryId)
                 .orElseThrow(() -> new IllegalArgumentException("Image not found for the given diaryId"));
 
-        String s3Url = image.getImageUrl();
-
         //url 에 해당하는 이미지 불러오기 ( 프론트에서 담당 )
         //S3Object s3Object = amazonS3Client.getObject(bucket, s3Url);
 
-        return s3Url;
+        return image.getImageUrl();
     }
 
 
