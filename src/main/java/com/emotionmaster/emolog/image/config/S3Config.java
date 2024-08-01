@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class S3Config {
@@ -26,4 +27,12 @@ public class S3Config {
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
                 .build();
     }
+
+    //서비스 로직 내에서 http 요청
+    @Bean
+    public RestTemplate restTemplate() {
+
+        return new RestTemplate();
+    }
+
 }

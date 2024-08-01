@@ -8,26 +8,41 @@ import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.repository.DiaryRepository;
 import com.emotionmaster.emolog.image.domain.Image;
 import com.emotionmaster.emolog.image.repository.ImageRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ImageService {
 
     private final AmazonS3 amazonS3Client;
     private final ImageRepository imageRepository;
     private final DiaryRepository diaryRepository;
+
+    private final RestTemplate restTemplate;
+    //Object <-> JSON 변환
+    private final ObjectMapper objectMapper;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -92,20 +107,35 @@ public class ImageService {
     }
 
 
+    //ChatGPT Image 생성 API 호출 및 이미지 Url 받기
+    public String fetchImageUrlFromApi(String content, String hexacode) throws Exception {
+        String apiUrl = "http://43.202.44.75:8000/api/ai/image";
+        log.info("apiUrl" + apiUrl);
 
-//    public String testSaveImage (String imageUrl ) throws Exception {
-//        //url 로 부터 이미지 byte 변환해서 불러오기
-//        byte[] imageBytes = downloadImageFromUrl( imageUrl );
-//        //S3에 이미지 저장
-//        String s3Url = uploadToS3( imageBytes );
-//        //db에 s3Url 저장하기
-//        Image image = Image.builder()
-//                .imageUrl(s3Url)
-//                .build();
-//        imageRepository.save(image);
-//
-//        return s3Url;
-//    }
+        // 요청 바디 객체 구성
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("content", content);
+        requestBody.put("hexacode", hexacode);
+
+        // 요청 헤더 구성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // HttpEntity 객체 생성
+        HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
+
+        // API 호출 및 응답 받기
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(apiUrl, entity, String.class);
+        String response = responseEntity.getBody();
+        log.info("response: " + response);
+
+        // 응답에서 URL 추출
+        // 객체 - json 변환
+        JsonNode jsonNode = objectMapper.readTree(response);
+        String imageUrl = jsonNode.get("url").asText();
+        log.info("imageUrl" + imageUrl);
+        return imageUrl;
+    }
 
 
 
