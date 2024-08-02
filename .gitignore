@@ -5,7 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+.gitignore
 src/main/resources/application-secret.yml
+
 ### STS ###
 .apt_generated
 .classpath
