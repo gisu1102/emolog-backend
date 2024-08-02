@@ -161,9 +161,9 @@ public class UserService {
                     .name(kakaoUser.getName())
                     .oauthType(kakaoUser.getProvider())
                     .build());
-            return new KakaoResponseDto(savedUser, generateToken(request, response, savedUser));
+            return new KakaoResponseDto(savedUser, generateToken(request, response, savedUser), true);
         }
-        return new KakaoResponseDto(user.get(), generateToken(request, response, user.get()));
+        return new KakaoResponseDto(user.get(), generateToken(request, response, user.get()), false);
 
     }
 

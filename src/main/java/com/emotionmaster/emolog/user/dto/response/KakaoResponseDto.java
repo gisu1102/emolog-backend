@@ -11,11 +11,14 @@ public class KakaoResponseDto {
     private String email;
     private String name;
     private String accessToken;
+    private boolean isNew;
 
     @Builder
-    public KakaoResponseDto(User user, String accessToken) {
+    public KakaoResponseDto(User user, String accessToken, boolean isNew) {
         this.email = user.getEmail();
         this.name = user.getName();
         this.accessToken = accessToken;
+        this.isNew = isNew;
+
     }
 }
