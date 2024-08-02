@@ -24,18 +24,14 @@ public class ColorController {
     @GetMapping
     public ResponseEntity<List<ColorAndDate>> findColorByMonth(
             @RequestParam(value = "month") int month,
-            @RequestParam(value = "week", required = false, defaultValue = "0") int week){
+            @RequestParam(value = "week", required = false, defaultValue = "0") int week) {
         List<ColorAndDate> colorList;
-        if (week==0){
+        if (week == 0) {
             colorList = colorService.findAllColorOfMonth(month);
-        } else{
+        } else {
             colorList = colorService.findAllColorOfWeek(month, week);
         }
 
         return ResponseEntity.ok().body(colorList);
-    }
-
-    private Map<LocalDate, String> dateAndColor(Diary diary){
-        return Map.of(diary.getDate(), diary.getColor().getHexa());
     }
 }
