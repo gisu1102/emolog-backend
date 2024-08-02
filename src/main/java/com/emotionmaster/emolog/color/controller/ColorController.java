@@ -2,7 +2,6 @@ package com.emotionmaster.emolog.color.controller;
 
 import com.emotionmaster.emolog.color.dto.response.ColorAndDate;
 import com.emotionmaster.emolog.color.service.ColorService;
-import com.emotionmaster.emolog.diary.domain.Diary;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/color")
