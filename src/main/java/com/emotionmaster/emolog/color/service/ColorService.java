@@ -65,7 +65,7 @@ public class ColorService {
     }
 
     private List<String> arrangeRequest(String emotion, List<List<Integer>> rgbOfEmotions, Map<EmotionType, Integer> types) {
-        List<String> emotions = List.of(emotion.split(","));
+        List<String> emotions = List.of(emotion.split("/"));
         for (String emo : emotions){
             ColorResponse colorResponse = defaultEmotionRepository.getColorByEmotion(emo);
             rgbOfEmotions.get(0).add(colorResponse.getRed());
