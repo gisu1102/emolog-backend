@@ -65,7 +65,7 @@ public class ColorService {
     }
 
     private List<String> arrangeRequest(String emotion, List<List<Integer>> rgbOfEmotions, Map<EmotionType, Integer> types) {
-        List<String> emotions = List.of(emotion.split(","));
+        List<String> emotions = List.of(emotion.split("/"));
         for (String emo : emotions){
             ColorResponse colorResponse = defaultEmotionRepository.getColorByEmotion(emo);
             rgbOfEmotions.get(0).add(colorResponse.getRed());
@@ -93,7 +93,8 @@ public class ColorService {
             if (amount.isPresent()) {
                 colors.remove(amount.get());
                 int sum = colors.stream().mapToInt(Integer::intValue).sum();
-                rgb[index++] = (int) (Math.ceil(amount.get() * bigWeight) + sum * smallWeight);
+                int color = (int) (Math.ceil(amount.get() * bigWeight) + sum * smallWeight);
+                if (color < 256) rgb[index] = color; else rgb[index] = 255;
             }
         }
         return rgb;

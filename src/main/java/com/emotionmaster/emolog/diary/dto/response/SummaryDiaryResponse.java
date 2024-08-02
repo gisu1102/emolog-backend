@@ -35,7 +35,7 @@ public class SummaryDiaryResponse {
                 .green(diary.getColor().getGreen())
                 .blue(diary.getColor().getBlue())
                 .build();
-        this.emotion = List.of(diary.getEmotion().getEmotion().split(",")); //todo 대표 감정?
+        this.emotion = List.of(diary.getEmotion().getEmotion().split("/"));
         this.comment = diary.getComment().getComment();
     }
 }
