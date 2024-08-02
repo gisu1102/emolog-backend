@@ -100,6 +100,9 @@ public class ImageService {
         //이미지 바이트 배열과 메타 데이터 사용해서 S3 에 업로드
         //S3 객체(파일) 에 대한 사용자정의(amazonS3) 추가 정보 포함 (파일 크기, 유형, 버켓,키)
         ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType("image/png");
+        //브라우저에 바로 표시 되도록 - 설정x 시 다운로드
+        metadata.setContentDisposition("inline");
         metadata.setContentLength(imageBytes.length);
         amazonS3Client.putObject(bucket, key, new ByteArrayInputStream(imageBytes), metadata);
 
