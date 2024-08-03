@@ -1,6 +1,15 @@
 package com.emotionmaster.emolog.image;
 
+import com.emotionmaster.emolog.config.error.errorcode.DiaryErrorCode;
+import com.emotionmaster.emolog.config.error.exception.DiaryException;
+import com.emotionmaster.emolog.config.error.response.ApiErrorResponse;
+import com.emotionmaster.emolog.diary.domain.Diary;
+import com.emotionmaster.emolog.diary.repository.DiaryRepository;
+import com.emotionmaster.emolog.image.dto.ImageResponse;
+import com.emotionmaster.emolog.image.dto.ImageRequest;
 import com.emotionmaster.emolog.image.service.ImageService;
+import com.emotionmaster.emolog.user.domain.User;
+import com.emotionmaster.emolog.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +25,8 @@ import java.io.IOException;
 public class ImageController {
 
     private final ImageService imageService;
+    private final DiaryRepository diaryRepository;
+    private final UserService userService;
 
 
     @PostMapping("/api/image/upload")
@@ -29,21 +40,33 @@ public class ImageController {
     }
 
     @PostMapping("/api/image/fetch-url")
-    public ResponseEntity<String> fetchImageUrl(@RequestParam String content, @RequestParam String hexacode, Long diaryId) {
+    public ResponseEntity<ImageResponse> fetchImageUrl(ImageRequest imageRequest) {
+        User user = userService.getCurrentUser();
+
+        if (diaryRepository.findByDateAndUserId(imageRequest.getDate(), user.getId()).isPresent())
+            throw new DiaryException(DiaryErrorCode.DIARY_DUPLICATED);
+
+        Diary diary = diaryRepository.save(Diary.builder()
+                .content(imageRequest.getContent())
+                .date(imageRequest.getDate())
+                .user(user)
+                .build());
         try {
             //chatgpt 에 image URL 생성 요청
-            String imageUrl = imageService.fetchImageUrlFromApi(content, hexacode);
+            String imageUrl = imageService.fetchImageUrlFromApi(imageRequest.getContent(), imageRequest.getHexacode());
 
             //생성된 image 저장
-            String S3imageUrl = imageService.saveImage(imageUrl, diaryId);
-            return ResponseEntity.ok(S3imageUrl);
+            String S3imageUrl = imageService.saveImage(imageUrl, diary.getId());
+            return ResponseEntity.ok()
+                    .body(new ImageResponse(S3imageUrl));
         } catch (IOException e) {
             log.error("Error in fetchImageUrl: ", e);
-            return ResponseEntity.status(403).body("Image URL is invalid or has expired");
+            ApiErrorResponse.toResponseEntity(e);
         }  catch (Exception e) {
             log.error("Error in fetchImageUrl", e);
-            return ResponseEntity.status(500).body("Error /fetch-url");
+            ApiErrorResponse.toResponseEntity(e);
         }
+        return null;
     }
 
 

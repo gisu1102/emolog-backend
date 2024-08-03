@@ -79,7 +79,11 @@ public class ColorService {
 
     private String HexColor(int[] rgb) {
         StringBuilder hexa= new StringBuilder();
-        for (int i=0; i<3; i++) hexa.append(Integer.toHexString(rgb[i]));
+        for (int i=0; i<3; i++) {
+            String hexString = Integer.toHexString(rgb[i]);
+            if (hexString.equals("0")) hexString = "00";
+            hexa.append(hexString);
+        }
         return hexa.toString();
     }
 

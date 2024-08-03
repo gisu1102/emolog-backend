@@ -21,7 +21,7 @@ public class SummaryDiaryResponse {
 
     protected String comment;
 
-    //todo 사진 추가
+    protected String url;
 
     public void toSummary(com.emotionmaster.emolog.diary.domain.Diary diary){
         this.diary = Diary.builder()
@@ -37,6 +37,7 @@ public class SummaryDiaryResponse {
                 .build();
         this.emotion = List.of(diary.getEmotion().getEmotion().split("/"));
         this.comment = diary.getComment().getComment();
+        this.url = diary.getImage().getImageUrl();
     }
 }
 

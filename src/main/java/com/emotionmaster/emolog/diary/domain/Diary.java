@@ -2,11 +2,13 @@ package com.emotionmaster.emolog.diary.domain;
 
 import com.emotionmaster.emolog.color.domain.Color;
 import com.emotionmaster.emolog.comment.domain.Comment;
+import com.emotionmaster.emolog.diary.dto.request.AddDiaryRequest;
 import com.emotionmaster.emolog.emotion.domain.Emotion;
 import com.emotionmaster.emolog.config.BaseEntity;
 import com.emotionmaster.emolog.image.domain.Image;
 import com.emotionmaster.emolog.q_a.domain.Q_A;
 import com.emotionmaster.emolog.user.domain.User;
+import com.emotionmaster.emolog.util.DateUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -71,6 +73,14 @@ public class Diary extends BaseEntity {
         this.week = week;
         this.dayOfWeek = dayOfWeek;
         this.user = user;
+    }
+
+    public Diary toUploadDiary(AddDiaryRequest request){
+        this.date = request.getDate();
+        this.week = DateUtil.getWeekOfMonthByDate(date);
+        this.dayOfWeek = date.getDayOfWeek();
+
+        return this;
     }
 
     public void toComment(Comment comment){
