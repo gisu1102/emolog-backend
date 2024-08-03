@@ -16,19 +16,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AddDiaryRequest {
     private LocalDate date;
-    private String content;
     private Qa q_a;
     private String emotion;
-
-    public Diary toDiaryEntity(User user){
-        return Diary.builder()
-                .date(date)
-                .content(content)
-                .week(DateUtil.getWeekOfMonthByDate(date))
-                .dayOfWeek(date.getDayOfWeek())
-                .user(user)
-                .build();
-    }
 
     public Q_A toQ_AEntity(Diary diary){
         return Q_A.builder()

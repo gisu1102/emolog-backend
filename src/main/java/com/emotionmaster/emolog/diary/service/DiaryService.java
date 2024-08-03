@@ -37,10 +37,11 @@ public class DiaryService {
     @Transactional
     public Diary save(AddDiaryRequest request){
         User user = userService.getCurrentUser();
-        if (diaryRepository.findByDateAndUserId(request.getDate(), user.getId()).isPresent())
-            throw new DiaryException(DiaryErrorCode.DIARY_DUPLICATED);
 
-        Diary diary = diaryRepository.save(request.toDiaryEntity(user));
+        Diary diary = diaryRepository.findByDateAndUserId(request.getDate(), user.getId())
+                .orElseThrow(() -> new DiaryException(DiaryErrorCode.DIARY_NOT_FOUND));
+
+        diaryRepository.save(diary.toUploadDiary(request));
         qaRepository.save(request.toQ_AEntity(diary)); //Q_A 저장
         EmotionType emotionType = colorService.save(request.getEmotion(), diary);
         //오늘의 색 저장과 감정들의 type 반환
