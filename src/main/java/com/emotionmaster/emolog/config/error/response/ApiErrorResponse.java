@@ -4,6 +4,7 @@ import com.emotionmaster.emolog.config.error.errorcode.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Getter
@@ -26,6 +27,15 @@ public class ApiErrorResponse {
                 .body(ApiErrorResponse.builder()
                         .status(e.getHttpStatus().value())
                         .error(e.getError())
+                        .message(e.getMessage())
+                        .build());
+    }
+
+    public static ResponseEntity<ApiErrorResponse> toResponseEntity(Exception e){
+        return ResponseEntity.internalServerError()
+                .body(ApiErrorResponse.builder()
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .error(e.getCause().getMessage())
                         .message(e.getMessage())
                         .build());
     }
