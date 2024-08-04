@@ -1,5 +1,6 @@
 package com.emotionmaster.emolog.config.error.handler;
 
+import com.emotionmaster.emolog.config.error.errorcode.UserErrorcode;
 import com.emotionmaster.emolog.config.error.exception.DiaryException;
 import com.emotionmaster.emolog.config.error.exception.UserException;
 import com.emotionmaster.emolog.config.error.response.ApiErrorResponse;
@@ -22,8 +23,8 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ApiErrorResponse> jwtException(ExpiredJwtException e){
-        return ApiErrorResponse.toResponseEntity(e);
+    public ResponseEntity<ApiErrorResponse> jwtException(){
+        return ApiErrorResponse.toResponseEntity(UserErrorcode.INVALID_TOKEN);
     }
 
     @ExceptionHandler(RuntimeException.class)
