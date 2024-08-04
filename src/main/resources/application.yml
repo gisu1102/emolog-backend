@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${DB.url}
-    username: ${DB.username}
-    password : ${DB.password}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password : ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   sql:
@@ -25,21 +25,21 @@ spring:
       client:
         registration:
           google:
-            client-id: ${google.id}
-            client-secret: ${google.secret}
-            redirect-uri: ${google.redirectUrl}
+            client-id: ${GOOGLE_ID}
+            client-secret: ${GOOGLE_SECRET}
+            redirect-uri: ${GOOGLE_REDIRECT_URL}
             scope:
               - email
               - profile
           naver:
-            client-id: ${naver.id}
-            client-secret: ${naver.secret}
+            client-id: ${NAVER_ID}
+            client-secret: ${NAVER_SECRET}
             scope:
               - name
               - email
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: ${naver.redirectUrl}
+            redirect-uri: ${NAVER_REDIRECT_URL}
         provider:
           google:
             authorization-uri: https://accounts.google.com/o/oauth2/auth
@@ -54,16 +54,16 @@ spring:
 
 jwt:
   issuer: gisu1102@gmail.com
-  secret_key: ${jwt.secret_key}
+  secret_key: ${JWT_SECRET_KEY}
 
 cloud:
   aws:
     credentials:
-      access-key: ${aws.s3.access}
-      secret-key: ${aws.s3.secret}
+      access-key: ${AWS_S3_ACCESS}
+      secret-key: ${AWS_S3_SECRET}
     region:
-      static: ${aws.s3.region}
+      static: ${AWS_S3_REGION}
     s3:
-      bucket: ${aws.s3.bucket}
+      bucket: ${AWS_S3_BUCKET}
     stack:
       auto: false
