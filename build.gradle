@@ -31,7 +31,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
-	implementation 'mysql:mysql-connector-java:8.0.33'
+//	implementation 'mysql:mysql-connector-java:8.0.33'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // Replace with the latest version
+
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
