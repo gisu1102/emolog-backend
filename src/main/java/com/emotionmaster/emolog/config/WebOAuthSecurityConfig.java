@@ -76,8 +76,8 @@ public class WebOAuthSecurityConfig implements WebMvcConfigurer {
                 .requestMatchers("/api/refresh-token").permitAll()
                 .requestMatchers("/login/oauth2/code/google").permitAll() // 추가
                 //테스트 권한 임시 허락
-                .requestMatchers("/**").permitAll()
-//                .requestMatchers("/api/**").authenticated()
+//                .requestMatchers("/**").permitAll()
+                .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
         );
 
@@ -114,7 +114,7 @@ public class WebOAuthSecurityConfig implements WebMvcConfigurer {
     private CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             CorsConfiguration corsConfiguration = new CorsConfiguration();
-            corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
+            corsConfiguration.setAllowedOrigins(Collections.singletonList("https://emolog.kro.kr"));
             corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
             corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
             corsConfiguration.setExposedHeaders(Collections.singletonList("*"));
