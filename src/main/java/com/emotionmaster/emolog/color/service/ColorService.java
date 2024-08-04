@@ -45,7 +45,7 @@ public class ColorService {
             types.put(EmotionType.values()[i], 0);
         }
 
-        //전달받은 감정들을 ','로 나눠서 DB에 입력된 rgb값과 type을 넣는다.
+        //전달받은 감정들을 '/'로 나눠서 DB에 입력된 rgb값과 type을 넣는다.
         List<String> emotions = arrangeRequest(emotion, rgbOfEmotions, types);
 
         //전달받은 rgb을 통해 오늘의 색을 계산하고, hex 코드를 만들어 저장한다.
@@ -99,6 +99,7 @@ public class ColorService {
                 int sum = colors.stream().mapToInt(Integer::intValue).sum();
                 int color = (int) (Math.ceil(amount.get() * bigWeight) + sum * smallWeight);
                 if (color < 256) rgb[index] = color; else rgb[index] = 255;
+                index++;
             }
         }
         return rgb;
