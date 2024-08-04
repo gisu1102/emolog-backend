@@ -63,12 +63,11 @@ public class ImageController {
                     .body(new ImageResponse(S3imageUrl));
         } catch (IOException e) {
             log.error("Error in fetchImageUrl: ", e);
-            ApiErrorResponse.toResponseEntity(e);
+            throw new DiaryException(DiaryErrorCode.API_BAD_REQUEST);
         }  catch (Exception e) {
             log.error("Error in fetchImageUrl", e);
-            ApiErrorResponse.toResponseEntity(e);
+            throw new DiaryException(DiaryErrorCode.IMAGE_SAVE_ERROR);
         }
-        return null;
     }
 
 

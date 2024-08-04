@@ -64,6 +64,6 @@ cloud:
     region:
       static: ${aws.s3.region}
     s3:
-      bucket: emolog
+      bucket: ${aws.s3.bucket}
     stack:
       auto: false
