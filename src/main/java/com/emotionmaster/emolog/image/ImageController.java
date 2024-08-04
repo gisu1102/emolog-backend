@@ -13,6 +13,7 @@ import com.emotionmaster.emolog.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,7 @@ public class ImageController {
         return imageService.getS3ImageUrl(diaryId);
     }
 
+    @Transactional
     @PostMapping("/api/image/fetch-url")
     public ResponseEntity<ImageResponse> fetchImageUrl(ImageRequest imageRequest) {
         User user = userService.getCurrentUser();
