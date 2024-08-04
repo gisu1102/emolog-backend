@@ -118,6 +118,7 @@ public class WebOAuthSecurityConfig implements WebMvcConfigurer {
             corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
             corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
             corsConfiguration.setExposedHeaders(Collections.singletonList("*"));
+            corsConfiguration.setAllowCredentials(true);
             corsConfiguration.setMaxAge(3600L);
             return corsConfiguration;
         };
