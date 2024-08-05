@@ -19,7 +19,7 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @PostMapping
-    public ResponseEntity<AddDiaryResponse> saveDiary(@RequestBody AddDiaryRequest request){
+    public ResponseEntity<AddDiaryResponse> saveDiary(@RequestBody AddDiaryRequest request) throws Exception {
         Diary savedDiary = diaryService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new AddDiaryResponse(savedDiary));
