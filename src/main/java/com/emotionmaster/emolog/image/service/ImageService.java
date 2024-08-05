@@ -105,14 +105,13 @@ public class ImageService {
 
 
     //ChatGPT Image 생성 API 호출 및 이미지 Url 받기
-    public String fetchImageUrlFromApi(String content, String hexacode) throws Exception {
-        String apiUrl = "http://43.202.44.75:8000/api/ai/image";
-        log.info("apiUrl" + apiUrl);
+    public String fetchImageUrlFromApi(String content) throws Exception {
+        String apiUrl = "http://3.34.51.210:8000/api/ai/image";
+        log.info("apiUrl : " + apiUrl);
 
         // 요청 바디 객체 구성
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("content", content);
-        requestBody.put("hexacode", hexacode);
 
         // 요청 헤더 구성
         HttpHeaders headers = new HttpHeaders();
@@ -124,13 +123,13 @@ public class ImageService {
         // API 호출 및 응답 받기
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(apiUrl, entity, String.class);
         String response = responseEntity.getBody();
-        log.info("response: " + response);
+        log.info("response : " + response);
 
         // 응답에서 URL 추출
         // 객체 - json 변환
         JsonNode jsonNode = objectMapper.readTree(response);
         String imageUrl = jsonNode.get("url").asText();
-        log.info("imageUrl" + imageUrl);
+        log.info("imageUrl : " + imageUrl);
         return imageUrl;
     }
 

@@ -11,12 +11,10 @@ import java.time.LocalDate;
 public class ImageRequest {
     private String content;
     private LocalDate date;
-    private String hexacode;
 
     @Builder
-    public ImageRequest(String content, LocalDate date, String hexacode) {
+    public ImageRequest(String content, LocalDate date) {
         this.content = content;
         this.date = date;
-        this.hexacode = hexacode;
     }
 }
