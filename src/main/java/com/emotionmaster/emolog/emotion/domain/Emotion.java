@@ -16,7 +16,7 @@ public class Emotion extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(2000)")
     private String emotion;
 
     @Column(name = "emotion_type")
