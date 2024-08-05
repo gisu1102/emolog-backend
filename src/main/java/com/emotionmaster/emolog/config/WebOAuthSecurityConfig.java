@@ -24,7 +24,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @RequiredArgsConstructor
 //@bean 정의를 통해 의존성 주입 용이하도록
@@ -115,7 +117,7 @@ public class WebOAuthSecurityConfig implements WebMvcConfigurer {
     private CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             CorsConfiguration corsConfiguration = new CorsConfiguration();
-            corsConfiguration.setAllowedOrigins(Collections.singletonList("https://emolog.kro.kr"));
+            corsConfiguration.setAllowedOrigins(List.of("https://emolog.kro.kr", "http://localhost:3000"));
             corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
             corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
             corsConfiguration.setExposedHeaders(Collections.singletonList("*"));
