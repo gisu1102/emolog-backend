@@ -112,7 +112,7 @@ class DiaryControllerTest {
         final String question = "questions";
         final String answer = "answers";
         final AddDiaryRequest request =
-                new AddDiaryRequest(now, new Qa(question, answer), emotion);
+                new AddDiaryRequest(now, new Qa(question, answer), emotion, content, "url");
 
         final String requestBody = objectMapper.writeValueAsString(request);
         String token = tokenProvider.generateToken(user, Duration.ofHours(4));
