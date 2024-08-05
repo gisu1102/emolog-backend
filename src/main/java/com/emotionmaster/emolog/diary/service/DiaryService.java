@@ -12,6 +12,7 @@ import com.emotionmaster.emolog.diary.repository.DiaryRepository;
 import com.emotionmaster.emolog.emotion.domain.Emotion;
 import com.emotionmaster.emolog.emotion.domain.EmotionType;
 import com.emotionmaster.emolog.emotion.repository.EmotionRepository;
+import com.emotionmaster.emolog.image.service.ImageService;
 import com.emotionmaster.emolog.q_a.repository.QaRepository;
 import com.emotionmaster.emolog.user.domain.User;
 import com.emotionmaster.emolog.user.service.UserService;
@@ -33,16 +34,19 @@ public class DiaryService {
     private final ColorService colorService;
     private final CommentService commentService;
     private final UserService userService;
+    private final ImageService imageService;
 
     @Transactional
-    public Diary save(AddDiaryRequest request){
+    public Diary save(AddDiaryRequest request) throws Exception {
         User user = userService.getCurrentUser();
 
-        Diary diary = diaryRepository.findByDateAndUserId(request.getDate(), user.getId())
-                .orElseThrow(() -> new DiaryException(DiaryErrorCode.DIARY_NOT_FOUND));
+        if (diaryRepository.findByDateAndUserId(request.getDate(), user.getId()).isPresent())
+            throw new DiaryException(DiaryErrorCode.DIARY_DUPLICATED);
 
-        diaryRepository.save(diary.toUploadDiary(request));
+        Diary diary = diaryRepository.save(request.toDiaryEntity(user));
         qaRepository.save(request.toQ_AEntity(diary)); //Q_A 저장
+        imageService.saveImage(request.getUrl(), diary.getId());
+
         EmotionType emotionType = colorService.save(request.getEmotion(), diary);
         //오늘의 색 저장과 감정들의 type 반환
         Emotion emotion = emotionRepository.save(request.toEmotionEntity(diary));

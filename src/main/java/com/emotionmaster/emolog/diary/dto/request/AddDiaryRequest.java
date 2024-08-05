@@ -18,7 +18,16 @@ public class AddDiaryRequest {
     private LocalDate date;
     private Qa q_a;
     private String emotion;
+    private String content;
+    private String url;
 
+    public Diary toDiaryEntity(User user){
+        return Diary.builder()
+                .content(content)
+                .date(date)
+                .user(user)
+                .build();
+    }
     public Q_A toQ_AEntity(Diary diary){
         return Q_A.builder()
                 .question(q_a.question())

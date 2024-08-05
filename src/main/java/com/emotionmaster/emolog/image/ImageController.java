@@ -43,24 +43,15 @@ public class ImageController {
     @Transactional
     @PostMapping("/api/image/fetch-url")
     public ResponseEntity<ImageResponse> fetchImageUrl(ImageRequest imageRequest) {
-        User user = userService.getCurrentUser();
 
-        if (diaryRepository.findByDateAndUserId(imageRequest.getDate(), user.getId()).isPresent())
-            throw new DiaryException(DiaryErrorCode.DIARY_DUPLICATED);
-
-        Diary diary = diaryRepository.save(Diary.builder()
-                .content(imageRequest.getContent())
-                .date(imageRequest.getDate())
-                .user(user)
-                .build());
         try {
             //chatgpt 에 image URL 생성 요청
             String imageUrl = imageService.fetchImageUrlFromApi(imageRequest.getContent());
 
-            //생성된 image 저장
-            String S3imageUrl = imageService.saveImage(imageUrl, diary.getId());
+//            //생성된 image 저장
+//            String S3imageUrl = imageService.saveImage(imageUrl, diary.getId());
             return ResponseEntity.ok()
-                    .body(new ImageResponse(S3imageUrl));
+                    .body(new ImageResponse(imageUrl));
         } catch (IOException e) {
             log.error("Error in fetchImageUrl: ", e);
             throw new DiaryException(DiaryErrorCode.API_BAD_REQUEST);

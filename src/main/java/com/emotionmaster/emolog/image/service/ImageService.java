@@ -2,6 +2,8 @@ package com.emotionmaster.emolog.image.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.emotionmaster.emolog.config.error.errorcode.DiaryErrorCode;
+import com.emotionmaster.emolog.config.error.exception.DiaryException;
 import com.emotionmaster.emolog.diary.domain.Diary;
 import com.emotionmaster.emolog.diary.repository.DiaryRepository;
 import com.emotionmaster.emolog.image.domain.Image;
@@ -63,7 +65,7 @@ public class ImageService {
 
 
         Diary diary = diaryRepository.findById(diaryId)
-                .orElseThrow(() -> new IllegalArgumentException("Diary not found"));
+                .orElseThrow(() -> new DiaryException(DiaryErrorCode.DIARY_NOT_FOUND));
 
         //db에 s3Url 저장하기
         Image image = Image.builder()
