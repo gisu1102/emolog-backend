@@ -16,10 +16,10 @@ public class Q_A extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(2000)")
     private String question;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(2000)")
     private String answer;
 
     @OneToOne(fetch = FetchType.LAZY)

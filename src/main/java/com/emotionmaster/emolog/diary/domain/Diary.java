@@ -28,7 +28,7 @@ public class Diary extends BaseEntity {
     @Column(name="diary_date", nullable = false)
     private LocalDate date;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(2000)")
     private String content;
 
     //몇 주인가?

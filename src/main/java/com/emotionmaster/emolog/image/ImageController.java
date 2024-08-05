@@ -55,7 +55,7 @@ public class ImageController {
                 .build());
         try {
             //chatgpt 에 image URL 생성 요청
-            String imageUrl = imageService.fetchImageUrlFromApi(imageRequest.getContent(), imageRequest.getHexacode());
+            String imageUrl = imageService.fetchImageUrlFromApi(imageRequest.getContent());
 
             //생성된 image 저장
             String S3imageUrl = imageService.saveImage(imageUrl, diary.getId());
